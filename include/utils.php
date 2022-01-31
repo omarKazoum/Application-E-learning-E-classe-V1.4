@@ -1,8 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 /**
  * configures file mode can be either of value 'JSON' for JSON files or 'CSV' for CSV file format
  */
