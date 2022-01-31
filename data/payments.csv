@@ -1,0 +1,11 @@
+id,name,paymentSchudule,billNumber,amountPaid,balanceAmount,date
+1,name 1,1st,10001,1001,1000,"1-Dec, 2021s"
+2,name 2,2nd,10002,1002,2000,"2-Dec, 2021s"
+3,name 3,3rd,10003,1003,3000,"3-Dec, 2021s"
+4,name 4,4th,10004,1004,4000,"4-Dec, 2021s"
+5,name 5,5th,10005,1005,5000,"5-Dec, 2021s"
+6,name 6,6th,10006,1006,6000,"6-Dec, 2021s"
+7,name 7,7th,10007,1007,7000,"7-Dec, 2021s"
+8,name 8,8th,10008,1008,8000,"8-Dec, 2021s"
+9,name 9,9th,10009,1009,9000,"9-Dec, 2021s"
+10,name 10,10th,10010,1010,10000,"10-Dec, 2021s"

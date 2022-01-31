@@ -1,0 +1,35 @@
+
+.card-students{
+    background-color: rgba(240, 249, 255, 1);
+}
+.card-body{
+    padding: 1rem;
+}
+.card-payments{
+    background-color: rgba(254, 251, 236, 1);
+}
+.card-users{
+    background: linear-gradient(110.42deg, #00C1FE 18.27%, #FAFFC1 91.84%);
+
+}
+.card .card-image{
+    height: 4rem;
+    align-self: start;
+    box-sizing: border-box;
+}
+.card-users .card-image,.card-payments .card-image{
+
+}
+.card-course{
+    background-color: rgba(254, 246, 251, 1);
+}
+.card-text{
+    padding-left: 1rem;
+    padding-top: 1rem;
+    color:rgba(108, 108, 108, 1);
+    font-size: 0.9rem;
+}
+.card-title{
+    font-size: 1.5rem;
+}
+

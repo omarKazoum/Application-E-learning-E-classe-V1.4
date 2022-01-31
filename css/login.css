@@ -1,0 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+:root{
+    --color-primary-blue:#00C1FE;
+    --color-lighter-gray:rgba(205, 205, 205, 1);
+}
+body {
+    background: linear-gradient(69.66deg, #00C1FE 19.39%, #FAFFC1 96.69%);
+    height: 100vh;
+}
+.card{
+    border-radius: 20px !important;
+}

@@ -1,0 +1,24 @@
+.card{
+    padding: 0.5rem !important;
+}
+.card-body{
+    text-align: start;
+    padding: 0.2rem;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+}
+.card-body >*{
+}
+.table-header{
+    font-size: .75rem;
+}
+.btns{
+    display: flex;
+    align-items: center;
+    gap:0.1rem;
+    justify-content: space-between;
+}
+.btn-details{
+    width:0.6rem;
+}

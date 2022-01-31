@@ -1,0 +1,24 @@
+.table-header > *:nth-child(1){
+  padding-left: 1.2rem;
+}
+.card{
+    padding: 0.5rem !important;
+}
+.card-body{
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+}
+.btns{
+    display: flex;
+    align-items: center;
+    gap:0.1rem;
+    justify-content: space-between;
+}
+.btn-add-students{
+    font-size:0.7rem !important
+}
+.card-students{
+    speak: literal-punctuation;
+}
