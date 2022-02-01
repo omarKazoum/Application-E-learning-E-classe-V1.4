@@ -198,9 +198,146 @@ class DBManager
         return DBManager::$db_connection->query($query);
     }
 
+    /**
+     * to insert a new course entry in the courses table
+     * @param array $courseToInsert contains all the fields in the corresponding table
+     * @return void
+     */
     public function insertCourse(array $courseToInsert){
-
-
+        $query='INSERT INTO '.DBContract::$Courses_Col_TableName.'('
+            .DBContract::$Courses_Col_Title.' ,'
+            .DBContract::$Courses_Col_MentorName.' ,'
+            .DBContract::$Courses_Col_Date.','
+            .DBContract::$Courses_Col_Duration.')'
+            .' VALUES(? , ?, ?, ?)';
+        $statment=DBManager::$db_connection->prepare($query);
+        $statment->bind_param('ssss',
+            $courseToInsert[DBContract::$Courses_Col_Title],
+            $courseToInsert[DBContract::$Courses_Col_MentorName],
+            $courseToInsert[DBContract::$Courses_Col_Date],
+            $courseToInsert[DBContract::$Courses_Col_Duration]
+        );
+        $statment->execute();
+    }
+    /**
+     * to insert a new course entry in the courses table
+     * @param array $courseToInsert contains all the fields in the corresponding table
+     * @return void
+     */
+    public function updateCourse(int $courseId,array $courseToInsert){
+        $query='UPDATE '.DBContract::$Courses_Col_TableName.' SET '
+            .DBContract::$Courses_Col_Title.'=? ,'
+            .DBContract::$Courses_Col_MentorName.'=? ,'
+            .DBContract::$Courses_Col_Date.'=? ,'
+            .DBContract::$Courses_Col_Duration.'=? '
+            .'WHERE '.DBContract::$Courses_Col_Id.'=?';
+        ;
+        $statment=DBManager::$db_connection->prepare($query);
+        $statment->bind_param('ssssi',
+            $courseToInsert[DBContract::$Courses_Col_Title],
+            $courseToInsert[DBContract::$Courses_Col_MentorName],
+            $courseToInsert[DBContract::$Courses_Col_Date],
+            $courseToInsert[DBContract::$Courses_Col_Duration],
+            $courseId
+        );
+        $statment->execute();
     }
 
+    /**
+     * delete the course with the given id
+     * @param $CourseId
+     * @return mixed
+     */
+    public function deleteCourse($CourseId){
+        $query='DELETE FROM '.DBContract::$Courses_Col_TableName.' WHERE '.DBContract::$Courses_Col_Id.'='.$CourseId;
+        return DBManager::$db_connection->query($query);
+    }
+
+    /**
+     * returns an array containing all available courses
+     * @return array
+     */
+    public function getAllCourses():array{
+        $query='SELECT * FROM '.DBContract::$Courses_Col_TableName;
+        $result=DBManager::$db_connection->query($query);
+        $courses=array();
+        while ($row =$result->fetch_assoc())
+            $courses[]=array(
+                DBContract::$Courses_Col_Id=>$row[DBContract::$Courses_Col_Id],
+                DBContract::$Courses_Col_Title=>$row[DBContract::$Courses_Col_Title],
+                DBContract::$Courses_Col_MentorName=>$row[DBContract::$Courses_Col_MentorName],
+                DBContract::$Courses_Col_Date=>$row[DBContract::$Courses_Col_Date],
+                DBContract::$Courses_Col_Duration=>$row[DBContract::$Courses_Col_Duration]
+            );
+        return $courses;
+    }
+
+    /**
+     * insert a payment
+     * @param array $payment
+     * @return void
+     */
+    public function insertPayment(array $payment){
+        $query='INSERT INTO '.DBContract::$PaymentDetails_TableName.'('
+                    .DBContract::$PaymentDetails_Col_Name.' ,'
+                    .DBContract::$PaymentDetails_Col_PaymentSchechule.' ,'
+                    .DBContract::$PaymentDetails_Col_BillNbr.','
+                    .DBContract::$PaymentDetails_Col_AmountPaid.','
+                    .DBContract::$PaymentDetails_Col_BalanceAmount.','
+                    .DBContract::$PaymentDetails_Col_Date
+                .')'
+                .' VALUES(? , ?, ?, ?, ?, ?)';
+        $statment=DBManager::$db_connection->prepare($query);
+        $statment->bind_param('sssdds',
+            $payment[DBContract::$PaymentDetails_Col_Name],
+            $payment[DBContract::$PaymentDetails_Col_PaymentSchechule],
+            $payment[DBContract::$PaymentDetails_Col_BillNbr],
+            $payment[DBContract::$PaymentDetails_Col_AmountPaid],
+            $payment[DBContract::$PaymentDetails_Col_BalanceAmount],
+            $payment[DBContract::$PaymentDetails_Col_Date]
+        );
+        $statment->execute();
+    }
+
+    /**
+     * returns an array containing all available payments
+     * @return array
+     */
+    public function getAllPayments(){
+        $query='SELECT * FROM '.DBContract::$PaymentDetails_TableName;
+        $result=DBManager::$db_connection->query($query);
+        $payments=array();
+        while ($row =$result->fetch_assoc())
+            $payments[]=array(
+                DBContract::$PaymentDetails_Col_Id=>$row[DBContract::$PaymentDetails_Col_Id],
+                DBContract::$PaymentDetails_Col_Name=>$row[DBContract::$PaymentDetails_Col_Name],
+                DBContract::$PaymentDetails_Col_PaymentSchechule=>$row[DBContract::$PaymentDetails_Col_PaymentSchechule],
+                DBContract::$PaymentDetails_Col_BillNbr=>$row[DBContract::$PaymentDetails_Col_BillNbr],
+                DBContract::$PaymentDetails_Col_AmountPaid=>$row[DBContract::$PaymentDetails_Col_AmountPaid],
+                DBContract::$PaymentDetails_Col_BalanceAmount=>$row[DBContract::$PaymentDetails_Col_BalanceAmount],
+                DBContract::$PaymentDetails_Col_Date=>$row[DBContract::$PaymentDetails_Col_Date]
+
+            );
+        return $payments;
+    }
+
+    public function getPaymentById(int $paymentId){
+        $query='SELECT * FROM '.DBContract::$PaymentDetails_TableName.' WHERE '.DBContract::$PaymentDetails_Col_Id.' ='.$paymentId;
+        $result=DBManager::$db_connection->query($query);
+        //$statment->bind_param('i',$paymentId);
+        $payment=null;
+        //$result=$statment->execute();
+        while ($row =$result->fetch_assoc())
+            $payment=array(
+                DBContract::$PaymentDetails_Col_Id=>$row[DBContract::$PaymentDetails_Col_Id],
+                DBContract::$PaymentDetails_Col_Name=>$row[DBContract::$PaymentDetails_Col_Name],
+                DBContract::$PaymentDetails_Col_PaymentSchechule=>$row[DBContract::$PaymentDetails_Col_PaymentSchechule],
+                DBContract::$PaymentDetails_Col_BillNbr=>$row[DBContract::$PaymentDetails_Col_BillNbr],
+                DBContract::$PaymentDetails_Col_AmountPaid=>$row[DBContract::$PaymentDetails_Col_AmountPaid],
+                DBContract::$PaymentDetails_Col_BalanceAmount=>$row[DBContract::$PaymentDetails_Col_BalanceAmount],
+                DBContract::$PaymentDetails_Col_Date=>$row[DBContract::$PaymentDetails_Col_Date]
+
+            );
+        return $payment;
+    }
 }
