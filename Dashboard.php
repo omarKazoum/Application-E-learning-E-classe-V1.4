@@ -1,3 +1,8 @@
+<?php
+require_once 'include/DBManager.php';
+$db_manager=DBManager::getInstance();
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,7 +29,7 @@
                                 Students
                             </p>
                             <h2 class="card-title align-self-end h1">
-                                243
+                                <?= $db_manager->getStudentsCount();?>
                             </h2>
                         </div>
                     </div>
@@ -37,7 +42,7 @@
                                 Course
                             </p>
                             <h2 class="card-title align-self-end h1">
-                                13
+                                <?= $db_manager->getCoursesCount() ?>
                             </h2>
                         </div>
                     </div>
@@ -50,7 +55,7 @@
                                 Payments
                             </p>
                             <h2 class="card-title align-self-end h1">
-                                DHS 556,000
+                                DHS <?= $db_manager->getPaymentsTotalAmount() ?>
                             </h2>
                         </div>
                     </div>
@@ -63,7 +68,7 @@
                                 Users
                             </p>
                             <h2 class="card-title align-self-end h1">
-                                3
+                                <?= $db_manager->getUsersCount() ?>
                             </h2>
                         </div>
                     </div>

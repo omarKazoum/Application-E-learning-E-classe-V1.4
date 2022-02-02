@@ -1,4 +1,7 @@
 <?php
+/**
+ * replace these values with your environment settings
+ */
 $db_host_name='127.0.0.1';
 $db_user_name='root';
 $db_password='';
