@@ -1,9 +1,11 @@
 <?php
 require_once 'include/DBManager.php';
+require_once 'include/utils.php';
 $ACTION_VIEW_PAYMENTS_LIST='avpl';
 $ACTION_VIEW_PAYMENT_DETAILS='avpd';
 $ACTION_KEY='a';
 $action=isset($_GET[$ACTION_KEY])?$_GET[$ACTION_KEY]:$ACTION_VIEW_PAYMENTS_LIST;
+?>
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,7 +28,7 @@ $action=isset($_GET[$ACTION_KEY])?$_GET[$ACTION_KEY]:$ACTION_VIEW_PAYMENTS_LIST;
                 <div class="col-12 main-content-toolbar d-flex pb-2 justify-content-between align-items-center border-bottom-light">
                     <h1 class="h4 fw-bold">Payment Details</h1>
                     <div class="toolbar-left-part">
-                        <a class="sort ic ic-sort btn btn-sort" title="sort button"></a>
+                        <a class="sort ic ic-sort btn btn-sort" title="sort button" href="payments.php?<?= "$ORDER_KEY=$order_value_opposite"?>"></a>
                     </div>
                 </div>
             </div>
@@ -54,7 +56,7 @@ $action=isset($_GET[$ACTION_KEY])?$_GET[$ACTION_KEY]:$ACTION_VIEW_PAYMENTS_LIST;
             <div class="col-12 cards">
                 <?php
                     // let's load data from database
-                    $payments=DBManager::getInstance()->getAllPayments();
+                    $payments=DBManager::getInstance()->getAllPayments($order_value);
                     // now let's print the data
                     foreach($payments as $payment){
                 ?>

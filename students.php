@@ -6,8 +6,7 @@ $db_manager=DBManager::getInstance();
 $ORDER_BY_KEY='ob';
 $ORDER_BY_ASC='oba';
 $ORDER_BY_DESC='obd';
-//TODO:: change table display according to the order value
-$order_by=isset($_GET[$ORDER_BY_KEY])?($_GET[$ORDER_BY_KEY]==$ORDER_BY_ASC?$ORDER_BY_ASC:$ORDER_BY_DESC):$ORDER_BY_ASC;
+$ACTION_VIEW='av';
 $ACTION_VIEW='av';
 $ACTION_ADD_FORM='aaf';
 $ACTION_ADD_SUBMIT='aas';
@@ -36,6 +35,8 @@ if($action==$ACTION_ADD_SUBMIT) {
         $user_add_result = $USER_ADD_FAILED;
 }else
     $user_add_result=isset($_GET[$USER_ADD_KEY])?$_GET[$USER_ADD_KEY]:$USER_ADD_NOT_SET;
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -60,7 +61,7 @@ if($action==$ACTION_ADD_SUBMIT) {
                             <div class="col-12 main-content-toolbar d-flex pb-2 justify-content-between align-items-center border-bottom-light">
                                 <h1 class="h5 fw-bold">Students List</h1>
                                 <div class="toolbar-left-part">
-                                    <button class="sort ic ic-sort btn btn-sort" title="sort button"></button>
+                                    <a class="sort ic ic-sort btn btn-sort" title="sort button" href="students.php?<?= "$ORDER_KEY=$order_value_opposite"?>"></a>
                                     <a class="btn btn-primary btn-add-students" title="add student button"  href="students.php?<?=$ACTION_GET_KEY.'='.$ACTION_ADD_FORM?>">ADD NEW STUDENT</a>
                                 </div>
                             </div>
@@ -98,7 +99,7 @@ if($action==$ACTION_ADD_SUBMIT) {
                         <div class="row col-12 cards">
                             <?php
                                 // let's fill the array with the students data
-                                $students=$db_manager->getAllStudents();
+                                $students=$db_manager->getAllStudents($order_value);
                                 // now let's print the data
                                 foreach($students as $student){
                             ?>

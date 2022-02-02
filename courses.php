@@ -19,7 +19,6 @@ $MSG_TYPE_KEY='mt';
 $MSG_TYPE_POSITIVE='mtp';
 $MSG_TYPE_NEGATIVE='mtn';
 $msg_type=isset($_GET[$MSG_TYPE_KEY])?$_GET[$MSG_TYPE_KEY]:false;
-
 ?>
 
 <!doctype html>
@@ -56,7 +55,7 @@ $msg_type=isset($_GET[$MSG_TYPE_KEY])?$_GET[$MSG_TYPE_KEY]:false;
                                 <div class="col-12 main-content-toolbar d-flex pb-2 justify-content-between align-items-center border-bottom-light">
                                     <h1 class="h4 fw-bold">Available Courses </h1>
                                     <div class="toolbar-left-part">
-                                        <a class="sort ic ic-sort btn btn-sort" title="sort button"></a>
+                                        <a class="sort ic ic-sort btn btn-sort" title="sort button" href="courses.php?<?= "$ORDER_KEY=$order_value_opposite"?>"></a>
                                         <a href="courses.php?<?= "$ACTION_COURSES_KEY=$ACTION_COURSES_ADD_FORM"?>" class="btn btn-primary">Add A course</a>
                                     </div>
                                 </div>
@@ -69,7 +68,7 @@ $msg_type=isset($_GET[$MSG_TYPE_KEY])?$_GET[$MSG_TYPE_KEY]:false;
                                 <div class="col-12 cards">
                                     <?php
                                     // let's load data from database
-                                    $courses=DBManager::getInstance()->getAllCourses();
+                                    $courses=DBManager::getInstance()->getAllCourses($order_value);
                                     // now let's print the data
                                     foreach($courses as $course){
                                         ?>

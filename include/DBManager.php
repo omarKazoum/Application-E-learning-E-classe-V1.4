@@ -197,10 +197,11 @@ class DBManager
     }
     /**
      * retreves an array of all students info
+     * @param string order either @ASC for ascending or @DESC for descending
      * @return array
      */
-    public function getAllStudents():array{
-        $query='SELECT * FROM '.DBContract::$Students_TableName;
+    public function getAllStudents(string $order='ASC'):array{
+        $query='SELECT * FROM '.DBContract::$Students_TableName.' ORDER BY '.DBContract::$Students_Col_DateAdmission.' '.$order;;
         $result=DBManager::$db_connection->query($query);
         $students=array();
         while ($row =$result->fetch_assoc())
@@ -283,10 +284,11 @@ class DBManager
 
     /**
      * returns an array containing all available courses
+     * @param string order either @ASC for ascending or @DESC for descending
      * @return array
      */
-    public function getAllCourses():array{
-        $query='SELECT * FROM '.DBContract::$Courses_TableName;
+    public function getAllCourses(string $order='ASC'):array{
+        $query='SELECT * FROM '.DBContract::$Courses_TableName.' ORDER BY '.DBContract::$Courses_Col_Date.' '.$order;;
         $result=DBManager::$db_connection->query($query);
         $courses=array();
         while ($row =$result->fetch_assoc())
@@ -300,6 +302,10 @@ class DBManager
         return $courses;
     }
 
+    /**
+     * @param int $courseId
+     * @return array
+     */
     public function getCourseById(int $courseId):array{
         $query='SELECT * FROM '.DBContract::$Courses_TableName.' WHERE '.DBContract::$Courses_Col_Id.'='.$courseId;
         $result=DBManager::$db_connection->query($query);
@@ -343,10 +349,11 @@ class DBManager
 
     /**
      * returns an array containing all available payments
+     * @param string order either @ASC for ascending or @DESC for descending
      * @return array
      */
-    public function getAllPayments(){
-        $query='SELECT * FROM '.DBContract::$PaymentDetails_TableName;
+    public function getAllPayments(string $order='ASC'){
+        $query='SELECT * FROM '.DBContract::$PaymentDetails_TableName.' ORDER BY '.DBContract::$PaymentDetails_Col_AmountPaid.' '.$order;
         $result=DBManager::$db_connection->query($query);
         $payments=array();
         while ($row =$result->fetch_assoc())
@@ -399,7 +406,6 @@ class DBManager
     }
     public function getCoursesCount():int{
         $count_courses_query='SELECT COUNT(*) AS count FROM '.DBContract::$Courses_TableName;
-
         return DBManager::$db_connection->query($count_courses_query)->fetch_assoc()['count'];
     }
     public function getPaymentsTotalAmount():int{
