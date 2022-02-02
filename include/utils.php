@@ -127,8 +127,7 @@ function addStudentToJson(array $studentToAdd){
 
 
 function areAllSuserAddFieldsSetAndValid():bool{
-    global $STUDENT_NAME,$STUDENT_EMAIL,$STUDENT_PHONE;
-    $studentFields=array($STUDENT_NAME,$STUDENT_EMAIL,$STUDENT_PHONE);
+    $studentFields=array(DBContract::$Students_Col_Name,DBContract::$Students_Col_Email,DBContract::$Students_Col_Phone);
     return areAllFieldsSet($studentFields,'POST');
 }
 

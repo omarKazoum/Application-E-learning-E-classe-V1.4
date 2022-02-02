@@ -1,6 +1,13 @@
 <?php
 
+require_once 'include/DBManager.php';
 require_once 'include/utils.php';
+$db_manager=DBManager::getInstance();
+$ORDER_BY_KEY='ob';
+$ORDER_BY_ASC='oba';
+$ORDER_BY_DESC='obd';
+//TODO:: change table display according to the order value
+$order_by=isset($_GET[$ORDER_BY_KEY])?($_GET[$ORDER_BY_KEY]==$ORDER_BY_ASC?$ORDER_BY_ASC:$ORDER_BY_DESC):$ORDER_BY_ASC;
 $ACTION_VIEW='av';
 $ACTION_ADD_FORM='aaf';
 $ACTION_ADD_SUBMIT='aas';
@@ -17,7 +24,13 @@ $user_add_result=isset($_GET[$USER_ADD_KEY])?$_GET[$USER_ADD_KEY]:$USER_ADD_NOT_
 $user_delete_key='user_delete';
 if($action==$ACTION_ADD_SUBMIT) {
     if (areAllSuserAddFieldsSetAndValid()) {
-        addStudentFromPostFields();
+        $db_manager->insertStudent(array(
+            DBContract::$Students_Col_Name=>$_POST[DBContract::$Students_Col_Name],
+            DBContract::$Students_Col_Email=>$_POST[DBContract::$Students_Col_Email],
+            DBContract::$Students_Col_Phone=>$_POST[DBContract::$Students_Col_Phone],
+            DBContract::$Students_Col_EnrollNbr=>uniqid(),
+            DBContract::$Students_Col_DateAdmission=>date('Y-m-d')
+        ));
         $user_add_result = $USER_ADD_SUCCESS;
     } else
         $user_add_result = $USER_ADD_FAILED;
@@ -29,6 +42,7 @@ if($action==$ACTION_ADD_SUBMIT) {
 <head>
     <meta charset="UTF-8">
     <title>Students</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/student.css">
@@ -86,7 +100,7 @@ if($action==$ACTION_ADD_SUBMIT) {
                 <div class="row col-12 cards">
                     <?php
                         // let's fill the array with the students data
-                        $students=getStudentsData();
+                        $students=$db_manager->getAllStudents();
                         // now let's print the data
                         foreach($students as $student){
                     ?>
@@ -97,24 +111,24 @@ if($action==$ACTION_ADD_SUBMIT) {
                                 <img src="images/student-img.jfif" alt="" class="w-100">
                             </span>
                             <span class="col-lg-2 text-start">
-                                <?php echo $student[$GLOBALS['STUDENT_NAME']];?>
+                                <?php echo $student[DBContract::$Students_Col_Name];?>
                             </span>
                             <span class="col-lg-2 text-start">
-                                <?php echo $student[$GLOBALS['STUDENT_EMAIL']];?>
+                                <?php echo $student[DBContract::$Students_Col_Email];?>
                             </span>
                             <span class="col-lg-2 text-start">
-                                <?php echo $student[$GLOBALS['STUDENT_PHONE']];?>
+                                <?php echo $student[DBContract::$Students_Col_Phone];?>
                             </span>
                             <span class="col-lg-2 text-start">
-                                <?php echo $student[$GLOBALS['STUDENT_ENROLL_NBR']];?>
+                                <?php echo $student[DBContract::$Students_Col_EnrollNbr];?>
                             </span>
                             <span class="col-lg-2 text-start">
-                                <?php echo $student[$GLOBALS['STUDENT_ADMISSION_DATE']];?>
+                                <?php echo $student[DBContract::$Students_Col_DateAdmission];?>
                             </span>
                             <span class="col-lg-1 btns">
-                                <a class="ic ic-edit btn btn-edit" title="edit button" href="students.php?<?= $GLOBALS['STUDENT_ID'].'='.$student[$GLOBALS['STUDENT_ID']].'&'.$ACTION_GET_KEY.'='.$ACTION_EDIT ?>">
+                                <a class="ic ic-edit btn btn-edit" title="edit button" href="students.php?<?= DBContract::$Students_Col_Id.'='.$student[DBContract::$Students_Col_Id].'&'.$ACTION_GET_KEY.'='.$ACTION_EDIT ?>">
                                 </a>
-                                <a class="ic ic-delete btn btn-delete" title="delete button" href="student_delete.php?id=<?= $student[$GLOBALS['STUDENT_ID']] ?>">
+                                <a class="ic ic-delete btn btn-delete" title="delete button" href="student_delete.php?<?= DBContract::$Students_Col_Id.'='.$student[DBContract::$Students_Col_Id] ?>">
                                 </a>
                             </span>
                         </div>
@@ -126,18 +140,18 @@ if($action==$ACTION_ADD_SUBMIT) {
                     elseif($action==$ACTION_ADD_FORM){
                         ?>
                         <form action="students.php?<?=$ACTION_GET_KEY.'='.$ACTION_ADD_SUBMIT?>" method="post" class=" col-12 col-md-6 offset-md-3">
-
+                            <h1 class="h5 fw-bold">Add a new Student</h1>
                             <div class="form-group justify-content-between">
-                                <label for="<?= $GLOBALS['STUDENT_NAME'] ;?>">Student name:</label>
-                                <input type="text" class="form-control"  required name="<?= $GLOBALS['STUDENT_NAME'] ;?>">
+                                <label for="<?= DBContract::$Students_Col_Name;?>">Student name:</label>
+                                <input type="text" class="form-control"  required name="<?= DBContract::$Students_Col_Name ;?>">
                             </div>
                             <div class="form-group justify-content-between">
-                                <label for="<?= $GLOBALS['STUDENT_EMAIL'] ;?>">Student Email</label>
-                                <input type="email" class="form-control" required name="<?= $GLOBALS['STUDENT_EMAIL'] ;?>">
+                                <label for="<?= DBContract::$Students_Col_Email ;?>">Student Email</label>
+                                <input type="email" class="form-control" required name="<?= DBContract::$Students_Col_Email ;?>">
                             </div>
                             <div class="form-group  justify-content-between">
-                                <label for="<?= $GLOBALS['STUDENT_PHONE'] ;?>">Student Phone Number</label>
-                                <input type="phone" class="form-control" required name="<?= $GLOBALS['STUDENT_PHONE'] ;?>">
+                                <label for="<?= DBContract::$Students_Col_Phone ;?>">Student Phone Number</label>
+                                <input type="phone" class="form-control" required name="<?= DBContract::$Students_Col_Phone ;?>">
                             </div>
                             <input type="submit" value="ADD STUDENT" class="btn btn-primary">
                         </form>
@@ -145,33 +159,73 @@ if($action==$ACTION_ADD_SUBMIT) {
                         elseif($action==$ACTION_ADD_SUBMIT){
                             ?>
                         <script>
-                            window.location.href="./students.php?+<?="$ACTION_GET_KEY=$ACTION_VIEW&$USER_ADD_KEY=$user_add_result" ?>";
+                           window.location.href="./students.php?<?="$ACTION_GET_KEY=$ACTION_VIEW&$USER_ADD_KEY=$user_add_result" ?>";
                         </script>
                     <?php
                         }elseif($action==$ACTION_EDIT){
-                            $student=getSt
+                            if(!isset($_GET[DBContract::$Students_Col_Id])){
                             ?>
-                        <form action="students.php?<?=$ACTION_GET_KEY.'='.$ACTION_ADD_SUBMIT?>" method="post" class=" col-12 col-md-6 offset-md-3">
+                                    <div class="alert alert-warning">
+                                        No Student specified
+                                    </div>
+                            <?php }else{
 
-                            <div class="form-group justify-content-between">
-                                <label for="<?= $GLOBALS['STUDENT_NAME'] ;?>">Student name:</label>
-                                <input type="text" class="form-control"  required name="<?= $GLOBALS['STUDENT_NAME'] ;?>" >
+                                $student=$db_manager->getStudentById($_GET[DBContract::$Students_Col_Id])
+                                ?>
+
+                        <form action="students.php?<?=$ACTION_GET_KEY.'='.$ACTION_ADD_SUBMIT.'&'.DBContract::$Students_Col_Id.'='.$student[DBContract::$Students_Col_Id]?>" method="post" class=" col-12 col-md-6 offset-md-3">
+                            <h1 class="h5 fw-bold">Edit Student</h1>
+                            <div class="form-group  justify-content-between">
+                                <label for="<?= DBContract::$Students_Col_EnrollNbr ;?>">Student Enroll Number</label>
+                                <input type="text" class="form-control" disabled value="<?= $student[DBContract::$Students_Col_EnrollNbr] ?>">
                             </div>
                             <div class="form-group justify-content-between">
-                                <label for="<?= $GLOBALS['STUDENT_EMAIL'] ;?>">Student Email</label>
-                                <input type="email" class="form-control" required name="<?= $GLOBALS['STUDENT_EMAIL'] ;?>">
+                                <label for="<?= DBContract::$Students_Col_Name ;?>">Student name:</label>
+                                <input type="text" class="form-control"  required name="<?= DBContract::$Students_Col_Name ;?>" value="<?= $student[DBContract::$Students_Col_Name] ?>" >
                             </div>
                             <div class="form-group  justify-content-between">
-                                <label for="<?= $GLOBALS['STUDENT_PHONE'] ;?>">Student Phone Number</label>
-                                <input type="phone" class="form-control" required name="<?= $GLOBALS['STUDENT_PHONE'] ;?>">
+                                <label for="<?= DBContract::$Students_Col_DateAdmission ;?>">Student Admission Date</label>
+                                <input type="date" class="form-control" disabled value="<?= $student[DBContract::$Students_Col_DateAdmission] ?>">
                             </div>
-                            <input type="submit" value="ADD STUDENT" class="btn btn-primary">
+
+                            <div class="form-group justify-content-between">
+                                <label for="<?= DBContract::$Students_Col_Email ;?>">Student Email</label>
+                                <input type="email" class="form-control" required name="<?= DBContract::$Students_Col_Email ;?>" value="<?= $student[DBContract::$Students_Col_Email] ?>">
+                            </div>
+                            <div class="form-group  justify-content-between">
+                                <label for="<?= DBContract::$Students_Col_Phone ;?>">Student Phone Number</label>
+                                <input type="phone" class="form-control" required name="<?= DBContract::$Students_Col_Phone ;?>" value="<?= $student[DBContract::$Students_Col_Phone] ?>">
+                            </div>
+
+                            <input type="submit" value="SAVE" class="btn btn-primary">
                         </form>
 
-                    <?php }elseif($action==$ACTION_EDIT_SUBMIT){ ?>
+                        <?php }}elseif($action==$ACTION_EDIT_SUBMIT){
+                        //now that we have the updated data let's save it
+                        $selected_student_id=isset($_GET[DBContract::$Students_Col_Id])?$_GET[DBContract::$Students_Col_Id]:false;
+                        $selected_student_id=isset($_GET[DBContract::$Students_Col_Id])?$_GET[DBContract::$Students_Col_Id]:false;
+                            if(!$selected_student_id){
+                                echo 'no student id specified !';
+                                exit();
+                            }
+                            if(!areAllSuserAddFieldsSetAndValid()){
+                                echo 'please fill all the required fields';
+                                exit();
+                            }
 
-                        handle the edit request
-                    <?php }?>
+                        $old_student=$db_manager->getStudentById($selected_student_id);
+                        $db_manager->updateStudent($selected_student_id,array(
+                            DBContract::$Students_Col_Name=>$_POST[DBContract::$Students_Col_Name],
+                            DBContract::$Students_Col_Email=>$_POST[DBContract::$Students_Col_Email],
+                            DBContract::$Students_Col_Phone=>$_POST[DBContract::$Students_Col_Phone],
+                            DBContract::$Students_Col_EnrollNbr=>$old_student[DBContract::$Students_Col_EnrollNbr],
+                            DBContract::$Students_Col_DateAdmission=>$old_student[DBContract::$Students_Col_DateAdmission]
+                        ));
+                       ?>
+                        <script>
+                            window.location.href="./students.php?<?="$ACTION_GET_KEY=$ACTION_VIEW" ?>";
+                        </script>
+                    <?php  }?>
                 </div>
 
             </div>

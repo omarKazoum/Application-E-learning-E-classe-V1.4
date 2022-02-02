@@ -18,17 +18,18 @@ class DBManager
          if(!DBManager::$instance){
             DBManager::$instance=new DBManager();
          }
+        DBManager::$instance->install();
         return DBManager::$instance;
     }
     /**
-     * connectq to database and stores a link object in DBManager::$db_connection
+     * connect to database and stores a link object in DBManager::$db_connection
      * @return void
      */
     private function connectToDb(){
         DBManager::$db_connection = new mysqli($GLOBALS['db_host_name'] ,
             $GLOBALS['db_user_name'],
             $GLOBALS['db_password'],
-            DBContract::$DB_NAME
+            $GLOBALS['db_name']
         );
         if(DBManager::$db_connection->connect_error)
             die(DBManager::$db_connection->connect_error);
@@ -53,7 +54,7 @@ class DBManager
      * @return void
      */
     private function createDB(){
-         $result=DBManager::$server_connection->query('CREATE DATABASE '.DBContract::$DB_NAME);
+         $result=DBManager::$server_connection->query('CREATE DATABASE '.$GLOBALS['db_name']);
         DBManager::$server_connection->close();
          return $result;
     }
@@ -62,7 +63,7 @@ class DBManager
      * create the required tables
      * @return bool
      */
-    public function createTables(){
+    private function createTables(){
             $students_table_query='CREATE TABLE '.DBContract::$Students_TableName.'('
                 .DBContract::$Students_Col_Id.' INT PRIMARY KEY AUTO_INCREMENT,'
                 .DBContract::$Students_Col_Name.' VARCHAR(20),'
@@ -81,7 +82,7 @@ class DBManager
                         .DBContract::$PaymentDetails_Col_Date.' DATE'.
                     ')';
 
-            $courses_table_query='CREATE TABLE '.DBContract::$Courses_Col_TableName.'('
+            $courses_table_query='CREATE TABLE '.DBContract::$Courses_TableName.'('
                 .DBContract::$Courses_Col_Id.' INT PRIMARY KEY AUTO_INCREMENT,'
                 .DBContract::$Courses_Col_Title.' VARCHAR(30),'
                 .DBContract::$Courses_Col_MentorName.' VARCHAR(20),'
@@ -101,14 +102,20 @@ class DBManager
      * create the database and all the required tables
      * @return void
      */
-    public function install(){
+    private function install(){
         $this->connectToServer();
-        //echo '<br>database creation :'.json_encode( DBManager::$instance->createDB());
+        DBManager::$instance->createDB();
         $this->connectToDb();
-        //echo '<br>students table creation:'.json_encode(DBManager::$instance->createTables());
+        DBManager::$instance->createTables();
     }
-    public function connect(){
+
+    /**
+     * unused
+     * @return DBManager|null
+     */
+    private function connect(){
         $this->connectToDb();
+        return DBManager::$instance;
     }
 
     /**
@@ -156,7 +163,7 @@ class DBManager
             .DBContract::$Students_Col_Phone.'=? ,'
             .DBContract::$Students_Col_EnrollNbr.'=?,'
             .DBContract::$Students_Col_DateAdmission.'=?'
-            .' WHERE '.DBContract::$Courses_Col_Id.'=?;';
+            .' WHERE '.DBContract::$Students_Col_Id.'=?;';
         $statment=DBManager::$db_connection->prepare($query);
         $statment->bind_param('sssssi',
             $student[DBContract::$Students_Col_Name],
@@ -167,6 +174,26 @@ class DBManager
         return $statment->execute();
     }
 
+    /**
+     * returns an array containing the data of the student with the given id
+     * @param int $studentId
+     * @return array
+     */
+    public function getStudentById(int $studentId):array{
+        $query='SELECT * FROM '.DBContract::$Students_TableName.' WHERE '.DBContract::$Students_Col_Id.' ='.$studentId;
+        $result=DBManager::$db_connection->query($query);
+        $student=null;
+        while ($row =$result->fetch_assoc())
+            $student=array(
+                DBContract::$Students_Col_Id=>$row[DBContract::$Students_Col_Id],
+                DBContract::$Students_Col_Name=>$row[DBContract::$Students_Col_Name],
+                DBContract::$Students_Col_Email=>$row[DBContract::$Students_Col_Email],
+                DBContract::$Students_Col_Phone=>$row[DBContract::$Students_Col_Phone],
+                DBContract::$Students_Col_EnrollNbr=>$row[DBContract::$Students_Col_EnrollNbr],
+                DBContract::$Students_Col_DateAdmission=>$row[DBContract::$Students_Col_DateAdmission]
+            );
+        return $student;
+    }
     /**
      * retreves an array of all students info
      * @return array
@@ -204,7 +231,7 @@ class DBManager
      * @return void
      */
     public function insertCourse(array $courseToInsert){
-        $query='INSERT INTO '.DBContract::$Courses_Col_TableName.'('
+        $query='INSERT INTO '.DBContract::$Courses_TableName.'('
             .DBContract::$Courses_Col_Title.' ,'
             .DBContract::$Courses_Col_MentorName.' ,'
             .DBContract::$Courses_Col_Date.','
@@ -225,7 +252,7 @@ class DBManager
      * @return void
      */
     public function updateCourse(int $courseId,array $courseToInsert){
-        $query='UPDATE '.DBContract::$Courses_Col_TableName.' SET '
+        $query='UPDATE '.DBContract::$Courses_TableName.' SET '
             .DBContract::$Courses_Col_Title.'=? ,'
             .DBContract::$Courses_Col_MentorName.'=? ,'
             .DBContract::$Courses_Col_Date.'=? ,'
@@ -249,7 +276,7 @@ class DBManager
      * @return mixed
      */
     public function deleteCourse($CourseId){
-        $query='DELETE FROM '.DBContract::$Courses_Col_TableName.' WHERE '.DBContract::$Courses_Col_Id.'='.$CourseId;
+        $query='DELETE FROM '.DBContract::$Courses_TableName.' WHERE '.DBContract::$Courses_Col_Id.'='.$CourseId;
         return DBManager::$db_connection->query($query);
     }
 
@@ -258,7 +285,7 @@ class DBManager
      * @return array
      */
     public function getAllCourses():array{
-        $query='SELECT * FROM '.DBContract::$Courses_Col_TableName;
+        $query='SELECT * FROM '.DBContract::$Courses_TableName;
         $result=DBManager::$db_connection->query($query);
         $courses=array();
         while ($row =$result->fetch_assoc())
@@ -321,7 +348,12 @@ class DBManager
         return $payments;
     }
 
-    public function getPaymentById(int $paymentId){
+    /**
+     * get payments details for the given id
+     * @param int $paymentId
+     * @return array
+     */
+    public function getPaymentById(int $paymentId):array{
         $query='SELECT * FROM '.DBContract::$PaymentDetails_TableName.' WHERE '.DBContract::$PaymentDetails_Col_Id.' ='.$paymentId;
         $result=DBManager::$db_connection->query($query);
         //$statment->bind_param('i',$paymentId);

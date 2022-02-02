@@ -2,7 +2,6 @@
 require_once 'config.php';
 class DBContract
 {
-    public static string $DB_NAME='se_classe_db';
     // for students table
     public static string $Students_TableName='students';
     public static string $Students_Col_Id='id';
@@ -21,13 +20,10 @@ class DBContract
     public static string $PaymentDetails_Col_BalanceAmount='balance_amount';
     public static string $PaymentDetails_Col_Date='date';
     //for courses table
-    public static string $Courses_Col_TableName='courses';
+    public static string $Courses_TableName='courses';
     public static string $Courses_Col_Id='id';
     public static string $Courses_Col_Title='title';
     public static string $Courses_Col_MentorName='mentor_name';
     public static string $Courses_Col_Date='date';
     public static string $Courses_Col_Duration='duration';
-
-
-
 }

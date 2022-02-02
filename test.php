@@ -2,8 +2,6 @@
 <?php
     require_once('include/DBManager.php');
     $db_manager=DBManager::getInstance();
-    //$db_manager->install();//optional
-    $db_manager->connect();
     /*
     $db_manager->insertStudent(array(
             DBContract::$Students_Col_Name=>'omar',
@@ -43,7 +41,7 @@
     //echo 'done';
     //echo 'search with id \n';
     //print_r($db_manager->getPaymentById(4));
-
+    echo date('Y-m-d')
 ?>
 </pre>
 

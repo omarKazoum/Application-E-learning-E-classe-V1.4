@@ -13,7 +13,7 @@
                 Home
             </p>
         </a>
-        <a title="Course" href="#" class="btn gap-2  mb-4 d-flex justify-content-md-between justify-content-center w-100 align-items-center">
+        <a title="Course" href="courses.php" class="btn gap-2  <?php if(basename($_SERVER['SCRIPT_NAME'])=='courses.php')echo $active_class;else ?> mb-4 d-flex justify-content-md-between justify-content-center w-100 align-items-center">
             <span class="ic ic-course"></span>
             <p class="w-75 text-start m-0 d-none d-md-block">
                 Course
