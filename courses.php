@@ -101,14 +101,14 @@ $msg_type=isset($_GET[$MSG_TYPE_KEY])?$_GET[$MSG_TYPE_KEY]:false;
                                     </div>
                                     </div>
                         <?php       }
-                            }
-                        elseif($action==$ACTION_COURSES_DELETE){
-                                //let's delete selected course
-                                $db_manager->deleteCourse($selected_course_id);
-                                redirect_with_js('courses.php');
-                         }
-                         elseif($action==$ACTION_COURSES_ADD_FORM){?>
-                            <form action="courses.php?<?= "$ACTION_COURSES_KEY=$ACTION_COURSES_ADD_SUBMIT" ?>" method="POST">
+                        }
+                            elseif($action==$ACTION_COURSES_DELETE){
+                                    //let's delete selected course
+                                    $db_manager->deleteCourse($selected_course_id);
+                                    redirect_with_js('courses.php');
+                             }
+                             elseif($action==$ACTION_COURSES_ADD_FORM){?>
+                                 <form action="courses.php?<?= "$ACTION_COURSES_KEY=$ACTION_COURSES_ADD_SUBMIT" ?>" method="POST">
                                 <h1>Add new Course</h1>
                                 <div class="form-group">
                                     <label for="<?= DBContract::$Courses_Col_Title?>">Course title</label>
@@ -128,19 +128,19 @@ $msg_type=isset($_GET[$MSG_TYPE_KEY])?$_GET[$MSG_TYPE_KEY]:false;
                                 </div>
                                 <input type="submit" class="btn btn-primary" value="Save">
                             </form>
-                        <?php }
-                         elseif($action==$ACTION_COURSES_ADD_SUBMIT){
-                            if(areAllCourseFieldsSetAndValid()) {
-                                $db_manager->insertCourse(array(
-                                    DBContract::$Courses_Col_Title=>$_POST[DBContract::$Courses_Col_Title],
-                                    DBContract::$Courses_Col_MentorName=>$_POST[DBContract::$Courses_Col_MentorName],
-                                    DBContract::$Courses_Col_Date=>$_POST[DBContract::$Courses_Col_Date],
-                                    DBContract::$Courses_Col_Duration=>$_POST[DBContract::$Courses_Col_Duration],
-                                ));
-                                redirect_with_js("courses.php?$ACTION_COURSES_KEY=$ACTION_COURSES_LIST&$MSG_TYPE_KEY=course added successfully&$MSG_TYPE_KEY=$MSG_TYPE_POSITIVE");
-                            }else
-                                redirect_with_js("courses.php?$ACTION_COURSES_KEY=$ACTION_COURSES_ADD_FORM&$MSG_TYPE_KEY=failed to add course please make sure you have filled all  fields&$MSG_TYPE_KEY=$MSG_TYPE_NEGATIVE");
-                        }
+                            <?php }
+                            elseif($action==$ACTION_COURSES_ADD_SUBMIT){
+                                     if(areAllCourseFieldsSetAndValid()) {
+                                        $db_manager->insertCourse(array(
+                                            DBContract::$Courses_Col_Title=>$_POST[DBContract::$Courses_Col_Title],
+                                            DBContract::$Courses_Col_MentorName=>$_POST[DBContract::$Courses_Col_MentorName],
+                                            DBContract::$Courses_Col_Date=>$_POST[DBContract::$Courses_Col_Date],
+                                            DBContract::$Courses_Col_Duration=>$_POST[DBContract::$Courses_Col_Duration],
+                                        ));
+                                        redirect_with_js("courses.php?$ACTION_COURSES_KEY=$ACTION_COURSES_LIST&$MSG_TYPE_KEY=course added successfully&$MSG_TYPE_KEY=$MSG_TYPE_POSITIVE");
+                                    }else
+                                        redirect_with_js("courses.php?$ACTION_COURSES_KEY=$ACTION_COURSES_ADD_FORM&$MSG_TYPE_KEY=failed to add course please make sure you have filled all  fields&$MSG_TYPE_KEY=$MSG_TYPE_NEGATIVE");
+                                    }
                         elseif($action==$ACTION_COURSES_EDIT_FORM){
                                     $course=$db_manager->getCourseById($selected_course_id);
                                 ?>

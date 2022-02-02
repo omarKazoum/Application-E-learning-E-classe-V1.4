@@ -1,6 +1,8 @@
 <?php
-//repetitive code amongst all the pages
-$ORDER_KEY='o';
+/**
+ * repetitive code amongst all the pages
+ **/
+ $ORDER_KEY='o';
 $ORDER_ASC='ASC';
 $ORDER_DESC='DESC';
 $order_value=isset($_GET[$ORDER_KEY]) && ($_GET[$ORDER_KEY] ==$ORDER_ASC OR $_GET[$ORDER_KEY] ==$ORDER_DESC )? $_GET[$ORDER_KEY]:$ORDER_DESC;

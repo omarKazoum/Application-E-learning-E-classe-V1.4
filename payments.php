@@ -6,7 +6,6 @@ $ACTION_VIEW_PAYMENT_DETAILS='avpd';
 $ACTION_KEY='a';
 $action=isset($_GET[$ACTION_KEY])?$_GET[$ACTION_KEY]:$ACTION_VIEW_PAYMENTS_LIST;
 ?>
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
