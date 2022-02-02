@@ -198,3 +198,6 @@ body {
 .sidebar a:hover{
     background-color:var(--color-primary-blue);
 }
+.main-content-toolbar{
+    margin-bottom: 15px !important;
+}
