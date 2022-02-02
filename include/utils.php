@@ -126,11 +126,26 @@ function addStudentToJson(array $studentToAdd){
 }
 
 
-function areAllSuserAddFieldsSetAndValid():bool{
+function areAllStudentAddFieldsSetAndValid():bool{
     $studentFields=array(DBContract::$Students_Col_Name,DBContract::$Students_Col_Email,DBContract::$Students_Col_Phone);
     return areAllFieldsSet($studentFields,'POST');
 }
+function areAllCourseFieldsSetAndValid():bool{
+    $courseFields=array(
+        DBContract::$Courses_Col_Title
+        ,DBContract::$Courses_Col_MentorName
+        ,DBContract::$Courses_Col_Date
+        ,DBContract::$Courses_Col_Duration);
+    return areAllFieldsSet($courseFields,'POST');
 
+}
+
+function redirect_with_js($location){
+    ?>
+    <script>
+        window.location.href='<?=$location ?>';
+    </script>
+<?php }
 /**
  * checks if all the request data is supplied in the required method
  * @param array $fields

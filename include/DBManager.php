@@ -11,6 +11,7 @@ class DBManager
     private static ?DBManager $instance=null;
     private static $db_connection=null;
     private static $server_connection=null;
+
     private function __construct()
     {
     }
@@ -267,7 +268,7 @@ class DBManager
             $courseToInsert[DBContract::$Courses_Col_Duration],
             $courseId
         );
-        $statment->execute();
+        return $statment->execute();
     }
 
     /**
@@ -297,6 +298,20 @@ class DBManager
                 DBContract::$Courses_Col_Duration=>$row[DBContract::$Courses_Col_Duration]
             );
         return $courses;
+    }
+
+    public function getCourseById(int $courseId):array{
+        $query='SELECT * FROM '.DBContract::$Courses_TableName.' WHERE '.DBContract::$Courses_Col_Id.'='.$courseId;
+        $result=DBManager::$db_connection->query($query);
+        $row =$result->fetch_assoc();
+        $course=array(
+            DBContract::$Courses_Col_Id=>$row[DBContract::$Courses_Col_Id],
+            DBContract::$Courses_Col_Title=>$row[DBContract::$Courses_Col_Title],
+            DBContract::$Courses_Col_MentorName=>$row[DBContract::$Courses_Col_MentorName],
+            DBContract::$Courses_Col_Date=>$row[DBContract::$Courses_Col_Date],
+            DBContract::$Courses_Col_Duration=>$row[DBContract::$Courses_Col_Duration]
+        );
+        return $course;
     }
 
     /**
@@ -372,4 +387,27 @@ class DBManager
             );
         return $payment;
     }
+
+    /**
+     * get students and user count
+     * @return int
+     */
+    public function getStudentsCount():int{
+        $count_students_query='SELECT COUNT(*) AS count FROM '.DBContract::$Students_TableName;
+
+        return DBManager::$db_connection->query($count_students_query)->fetch_assoc()['count'];
+    }
+    public function getCoursesCount():int{
+        $count_courses_query='SELECT COUNT(*) AS count FROM '.DBContract::$Courses_TableName;
+
+        return DBManager::$db_connection->query($count_courses_query)->fetch_assoc()['count'];
+    }
+    public function getPaymentsTotalAmount():int{
+        $payments_total_query='SELECT SUM('.DBContract::$PaymentDetails_Col_AmountPaid.') AS SUM FROM '.DBContract::$PaymentDetails_TableName;
+        return DBManager::$db_connection->query($payments_total_query)->fetch_assoc()['SUM'];
+    }
+    public function getUsersCount(){
+        return $this->getStudentsCount();
+    }
+
 }
