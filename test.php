@@ -41,7 +41,8 @@
     //echo 'done';
     //echo 'search with id \n';
     //print_r($db_manager->getPaymentById(4));
-    echo date('Y-m-d')
+    //print_r($db_manager->getCourseById(10));
+    echo $db_manager->getPaymentsTotalAmount();
 ?>
 </pre>
 

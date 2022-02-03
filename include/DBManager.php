@@ -8,7 +8,7 @@ require_once 'config.php';
 require_once 'DBContract.php';
 class DBManager
 {
-    private static ?DBManager $instance=null;
+    private static  $instance;
     private static $db_connection=null;
     private static $server_connection=null;
 
