@@ -1,8 +1,14 @@
+<?php
+require_once 'include/DBManager.php';
+$db_manager=DBManager::getInstance();
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/main.css">
@@ -23,7 +29,7 @@
                                 Students
                             </p>
                             <h2 class="card-title align-self-end h1">
-                                243
+                                <?= $db_manager->getStudentsCount();?>
                             </h2>
                         </div>
                     </div>
@@ -36,7 +42,7 @@
                                 Course
                             </p>
                             <h2 class="card-title align-self-end h1">
-                                13
+                                <?= $db_manager->getCoursesCount() ?>
                             </h2>
                         </div>
                     </div>
@@ -49,7 +55,7 @@
                                 Payments
                             </p>
                             <h2 class="card-title align-self-end h1">
-                                DHS 556,000
+                                DHS <?= $db_manager->getPaymentsTotalAmount() ?>
                             </h2>
                         </div>
                     </div>
@@ -62,7 +68,7 @@
                                 Users
                             </p>
                             <h2 class="card-title align-self-end h1">
-                                3
+                                <?= $db_manager->getUsersCount() ?>
                             </h2>
                         </div>
                     </div>
