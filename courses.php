@@ -183,5 +183,6 @@ $msg_type=isset($_GET[$MSG_TYPE_KEY])?$_GET[$MSG_TYPE_KEY]:false;
         </div>
     </div>
 </main>
+<?php include 'footer.php'?>
 </body>
 </html>
