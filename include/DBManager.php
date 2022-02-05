@@ -1,14 +1,13 @@
 <?php
-
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 require_once 'config.php';
 require_once 'DBContract.php';
+
+    ini_set('display_errors', !$PRODUCTION);
+    ini_set('display_startup_errors', !$PRODUCTION);
+    error_reporting((!$PRODUCTION) ?E_ALL:0);
 class DBManager
 {
-    private static  $instance;
+    private static ?DBManager $instance=null;
     private static $db_connection=null;
     private static $server_connection=null;
 
@@ -44,7 +43,7 @@ class DBManager
         DBManager::$server_connection = new mysqli($GLOBALS['db_host_name'] ,
             $GLOBALS['db_user_name'],
             $GLOBALS['db_password']);
-        if(DBManager::$server_connection->connect_error)
+        if(DBManager::$server_connection->connect_error && !$PRODUCTION)
             die(DBManager::$server_connection->connect_error);
         /*else
             echo 'the connection with db '.(DBManager::$server_connection!=null?'established ':'failed');
@@ -68,6 +67,7 @@ class DBManager
             $students_table_query='CREATE TABLE '.DBContract::$Students_TableName.'('
                 .DBContract::$Students_Col_Id.' INT PRIMARY KEY AUTO_INCREMENT,'
                 .DBContract::$Students_Col_Name.' VARCHAR(20),'
+                .DBContract::$Students_Col_Image.' TEXT,'
                 .DBContract::$Students_Col_Email.' TEXT ,'
                 .DBContract::$Students_Col_Phone.' VARCHAR(12) ,'
                 .DBContract::$Students_Col_EnrollNbr.' TEXT ,'
@@ -133,16 +133,19 @@ class DBManager
      * insert a new student
      */
     public function insertStudent(array $student){
+
         $query='INSERT INTO '.DBContract::$Students_TableName.'('
                 .DBContract::$Students_Col_Name.','
+                .DBContract::$Students_Col_Image.','
                 .DBContract::$Students_Col_Email.' ,'
                 .DBContract::$Students_Col_Phone.' ,'
                 .DBContract::$Students_Col_EnrollNbr.','
                 .DBContract::$Students_Col_DateAdmission.')'
-                .' VALUES(? , ?, ?, ?, ?)';
+                .' VALUES(? , ?, ?, ?, ?,?)';
         $statment=DBManager::$db_connection->prepare($query);
-        $statment->bind_param('sssss',
+        $statment->bind_param('ssssss',
             $student[DBContract::$Students_Col_Name],
+            $student[DBContract::$Students_Col_Image],
             $student[DBContract::$Students_Col_Email],
             $student[DBContract::$Students_Col_Phone],
             $student[DBContract::$Students_Col_EnrollNbr],
@@ -158,7 +161,8 @@ class DBManager
      * @return mixed
      */
     public function updateStudent($studentId,array $student){
-        $query='UPDATE '.DBContract::$Students_TableName.' SET '
+        $query='UPDATE '.DBContract::$Students_TableName.' SET '.
+            DBContract::$Students_Col_Image.'=?,'
             .DBContract::$Students_Col_Name.'=?,'
             .DBContract::$Students_Col_Email.'=? ,'
             .DBContract::$Students_Col_Phone.'=? ,'
@@ -166,7 +170,8 @@ class DBManager
             .DBContract::$Students_Col_DateAdmission.'=?'
             .' WHERE '.DBContract::$Students_Col_Id.'=?;';
         $statment=DBManager::$db_connection->prepare($query);
-        $statment->bind_param('sssssi',
+        $statment->bind_param('ssssssi',
+            $student[DBContract::$Students_Col_Image],
             $student[DBContract::$Students_Col_Name],
             $student[DBContract::$Students_Col_Email],
             $student[DBContract::$Students_Col_Phone],
@@ -186,6 +191,7 @@ class DBManager
         $student=null;
         while ($row =$result->fetch_assoc())
             $student=array(
+                DBContract::$Students_Col_Image=>$row[DBContract::$Students_Col_Image],
                 DBContract::$Students_Col_Id=>$row[DBContract::$Students_Col_Id],
                 DBContract::$Students_Col_Name=>$row[DBContract::$Students_Col_Name],
                 DBContract::$Students_Col_Email=>$row[DBContract::$Students_Col_Email],
@@ -206,6 +212,7 @@ class DBManager
         $students=array();
         while ($row =$result->fetch_assoc())
             $students[]=array(
+                DBContract::$Students_Col_Image=>$row[DBContract::$Students_Col_Image],
                 DBContract::$Students_Col_Name=>$row[DBContract::$Students_Col_Name],
                 DBContract::$Students_Col_Email=>$row[DBContract::$Students_Col_Email],
                 DBContract::$Students_Col_Phone=>$row[DBContract::$Students_Col_Phone],
@@ -394,7 +401,6 @@ class DBManager
             );
         return $payment;
     }
-
     /**
      * get students and user count
      * @return int
@@ -409,11 +415,10 @@ class DBManager
         return DBManager::$db_connection->query($count_courses_query)->fetch_assoc()['count'];
     }
     public function getPaymentsTotalAmount():int{
-        $payments_total_query='SELECT SUM('.DBContract::$PaymentDetails_Col_AmountPaid.') AS SUM FROM '.DBContract::$PaymentDetails_TableName;
-        return DBManager::$db_connection->query($payments_total_query)->fetch_assoc()['SUM'];
+        $payments_total_query='SELECT SUM('.DBContract::$PaymentDetails_Col_AmountPaid.') AS sum FROM '.DBContract::$PaymentDetails_TableName;
+        return DBManager::$db_connection->query($payments_total_query)->fetch_assoc()['sum'];
     }
     public function getUsersCount(){
         return $this->getStudentsCount();
     }
-
 }

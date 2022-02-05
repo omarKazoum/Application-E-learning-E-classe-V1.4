@@ -1,7 +1,6 @@
 <?php
 require_once 'include/DBManager.php';
 $db_manager=DBManager::getInstance();
-
 ?>
 <!DOCTYPE html>
 <html lang="en">

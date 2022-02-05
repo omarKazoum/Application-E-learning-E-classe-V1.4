@@ -47,3 +47,26 @@ function areAllFieldsSet(array $fields,string $method) :bool{
     }
     return true;
 }
+function upload_profile_image($img_old_name=false):string{
+    if(isset($_FILES[DBContract::$Students_Col_Image])) {
+        $temp_path = $_FILES[DBContract::$Students_Col_Image]['tmp_name'];
+        $img_data = getimagesize($temp_path);
+        $img_type=basename($img_data['mime']);
+        echo 'type '.$img_type;
+        if ($img_data and in_array($img_type, DBContract::$Students_ProfileImgAcceptedTypes)) {
+            if(!$img_old_name) {
+                $new_path = 'uploads/images/profile_' . time() . rand(0, 100000) . '_img.' . $img_type;
+                while (file_exists($new_path)) {
+                    $new_path = 'uploads/images/profile_' . time() . rand(0, 100000) . '_img.' . $img_type;
+                }
+            }else{
+                $new_path=$img_old_name;
+            }
+            if (move_uploaded_file($temp_path,$new_path )) {
+                echo 'file moved to the dir';
+            };
+        } else
+            return false;
+    }
+    return $new_path;
+}

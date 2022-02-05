@@ -44,12 +44,10 @@ $msg_type=isset($_GET[$MSG_TYPE_KEY])?$_GET[$MSG_TYPE_KEY]:false;
             <div class="main-content row p-2 d-flex align-items-center">
                 <div class="row p-2 d-flex align-items-center">
                     <?php
-                        if(isset($msg) &&$msg){
-                    ?>
+                        if($msg){ ?>
                         <div class="alert <?= ($msg_type==$MSG_TYPE_NEGATIVE?'alert-danger':'').($msg_type==$MSG_TYPE_POSITIVE?'alert-success':'')?>">
                             <?= $msg?>
                         </div>
-
                     <?php }?>
                     <?php if($action==$ACTION_COURSES_LIST){?>
                                 <div class="col-12 main-content-toolbar d-flex pb-2 justify-content-between align-items-center border-bottom-light">
@@ -100,7 +98,7 @@ $msg_type=isset($_GET[$MSG_TYPE_KEY])?$_GET[$MSG_TYPE_KEY]:false;
                                         There are no courses available please add some by clicking on "Add A Course" button
                                     </div>
                                     </div>
-                        <?php       }
+                         <?php }
                         }
                             elseif($action==$ACTION_COURSES_DELETE){
                                     //let's delete selected course
