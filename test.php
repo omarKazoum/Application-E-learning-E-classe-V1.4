@@ -1,13 +1,8 @@
 <pre>
 <?php
-
-    require_once 'include/DBManager.php';
-    $db_mgr=DBManager::getInstance();
-    require_once 'include/DBContract.php';
-    echo 'files data<br>';
-    print_r($_FILES);
-    echo 'post data<br>';
-    print_r($_POST);
-
+    require_once 'include/AccountManager.php';
+    $am=AccountManager::getInstance();
+    $am->login('eee');
+    echo $am->isLoggedIn()?'logged':'not logged in';
     ?>
 </pre>
