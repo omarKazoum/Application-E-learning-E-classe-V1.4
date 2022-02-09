@@ -3,10 +3,28 @@ class User{
     private string $email;
     private string $userName;
     private string $passwordHash;
-    public function __construct(string $email=null,string $userName=null,string $passwordHash=null){
+    private int $id;
+    public function __construct(int $id=-1,string $email='',string $userName='',string $passwordHash=''){
         $this->email=$email;
         $this->userName=$userName;
         $this->passwordHash=$passwordHash;
+        $this->id=$id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId(int $id): void
+    {
+        $this->id = $id;
     }
 
     /**
