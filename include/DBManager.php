@@ -1,6 +1,7 @@
 <?php
 require_once 'config.php';
 require_once 'DBContract.php';
+require_once 'include/User.php';
 
     ini_set('display_errors', !PRODUCTION);
     ini_set('display_startup_errors', !PRODUCTION);
@@ -117,8 +118,25 @@ class DBManager
         DBManager::$instance->createTables();
     }
 
-    public function getUserbyEmail()
+    /**
+     * @param int $userId the user id in users table to be found if exists
+     * @return false|User returns an object of type user or false if none is found
+     */
+    public function getUserById(int $userId)
     {
+        $sql='SELECT * FROM '.DBContract::$Users_TableName;
+        $res=DBManager::$db_connection->query($sql)->fetch_assoc();
+        if($res) {
+            $user = new User();
+            $user->setId($userId);
+            $user->setEmail($res[DBContract::$Users_Col_Email]);
+            $user->setPasswordHash($res[DBContract::$Users_Col_PasswordHash]);
+            $user->setUserName($res[DBContract::$Users_Col_UserName]);
+            return $user;
+        }else{
+            return null;
+        }
+
 
     }
 
@@ -426,9 +444,11 @@ class DBManager
         $count_courses_query='SELECT COUNT(*) AS count FROM '.DBContract::$Courses_TableName;
         return DBManager::$db_connection->query($count_courses_query)->fetch_assoc()['count'];
     }
-    public function getPaymentsTotalAmount():int{
+    public function getPaymentsTotalAmount():int {
         $payments_total_query='SELECT SUM('.DBContract::$PaymentDetails_Col_AmountPaid.') AS sum FROM '.DBContract::$PaymentDetails_TableName;
-        return DBManager::$db_connection->query($payments_total_query)->fetch_assoc()['sum'];
+
+        $c=DBManager::$db_connection->query($payments_total_query)->fetch_assoc()['sum'];
+        return $c!=null? $c:0;
     }
     public function getUsersCount(){
         return $this->getStudentsCount();
