@@ -7,4 +7,4 @@ $db_user_name='root';//admin
 $db_password='';// oxxK#a5uVKEmIh=*
 $db_name='e_classe_db';
 $session_time_out_minutes=0.5;
-$PRODUCTION=false;
+const PRODUCTION=false;
