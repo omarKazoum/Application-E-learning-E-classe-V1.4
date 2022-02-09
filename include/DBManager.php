@@ -43,7 +43,7 @@ class DBManager
         DBManager::$server_connection = new mysqli($GLOBALS['db_host_name'] ,
             $GLOBALS['db_user_name'],
             $GLOBALS['db_password']);
-        if(DBManager::$server_connection->connect_error && !$PRODUCTION)
+        if(DBManager::$server_connection->connect_error && !PRODUCTION)
             die(DBManager::$server_connection->connect_error);
         /*else
             echo 'the connection with db '.(DBManager::$server_connection!=null?'established ':'failed');
@@ -90,7 +90,14 @@ class DBManager
                 .DBContract::$Courses_Col_Date.' DATETIME,'
                 .DBContract::$Courses_Col_Duration.' TIME'
             .')';
-
+            $users_table_query='CREATE TABLE '.DBContract::$Users_TableName.'('
+                    .DBContract::$Users_Col_Id.' INT AUTO_INCREMENT PRIMARY KEY,'
+                    .DBContract::$Users_Col_Email.' VARCHAR(40),'
+                    .DBContract::$Users_Col_UserName.' VARCHAR(30),'
+                    .DBContract::$Users_Col_PasswordHash.' TEXT'
+                .')';
+            ;
+            //echo '<br>user table query is: '.$users_table_query.'</br>';
             //echo '<br>payments table query : '.$payments_table_query;
             //echo '<br>courses table query : '.$courses_table_query;
             $r1=DBManager::$db_connection->query($students_table_query);
