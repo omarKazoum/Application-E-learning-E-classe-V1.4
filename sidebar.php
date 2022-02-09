@@ -43,7 +43,7 @@
                 Settings
             </p>
         </a>
-        <a href="index.php" title='Log out' class="mt-md-5 mt-2 btn gap-0 d-flex justify-content-center align-items-center" >
+        <a href="logout.php" title='Log out' class="mt-md-5 mt-2 btn gap-0 d-flex justify-content-center align-items-center" >
             <p class=" text-start m-0 d-none d-md-block ">
                 Logout
             </p>
