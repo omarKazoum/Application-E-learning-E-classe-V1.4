@@ -2,9 +2,9 @@
 require_once 'config.php';
 require_once 'DBContract.php';
 
-    ini_set('display_errors', !$PRODUCTION);
-    ini_set('display_startup_errors', !$PRODUCTION);
-    error_reporting((!$PRODUCTION) ?E_ALL:0);
+    ini_set('display_errors', !PRODUCTION);
+    ini_set('display_startup_errors', !PRODUCTION);
+    error_reporting((!PRODUCTION) ?E_ALL:0);
 class DBManager
 {
     private static ?DBManager $instance=null;
