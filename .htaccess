@@ -1,0 +1,3 @@
+php_value session.gc_maxlifetime 21600
+php_value session.cache_expire 21600
+php_value session.cookie_lifetime 21600

@@ -110,6 +110,11 @@ class DBManager
         DBManager::$instance->createTables();
     }
 
+    public function getUserbyEmail()
+    {
+
+    }
+
     /**
      * unused
      * @return DBManager|null

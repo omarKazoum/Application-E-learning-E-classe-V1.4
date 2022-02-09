@@ -1,3 +1,16 @@
+<?php
+require_once 'include/DBContract.php';
+require_once 'include/AccountManager.php';
+require_once 'include/DBManager.php';
+$am=AccountManager::getInstance();
+if($am->isLoggedIn()):
+    header('location:Dashboard.php');
+elseif($_SERVER['REQUEST_METHOD']=='POST'):
+    //let's process submitted info
+      $db_manager->getUserbyEmail();
+else:
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,19 +31,19 @@
                 <p class="text-center text-gray">
                     Enter your credentials to access your account
                 </p>
-                <form action="Dashboard.php" method="POST">
+                <form action="index.php" method="POST">
                     <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                        <label for="<?= DBContract::$Users_Col_Email ?>">Email</label>
+                        <input type="email" class="form-control" id="<?= DBContract::$Users_Col_Email ?>" name="<?= DBContract::$Users_Col_Email ?>" placeholder="Enter your email">
                     </div>
                     <div class="form-group">
-                        <label for="pass">Password</label>
-                        <input type="password" class="form-control" id="pass" placeholder="Enter your password">
+                        <label for="<?= DBContract::$Users_Col_Password ?>">Password</label>
+                        <input type="password" class="form-control" name="<?= DBContract::$Users_Col_Password ?>" id="<?= DBContract::$Users_Col_Password ?>" placeholder="Enter your password">
                     </div>
                     <input type="submit" class="form-control btn bg-primary text-light py-2" value="SIGN IN">
                 </form>
                 <p class="text-gray mt-3 mb-0 text-center">
-                    Forgot your password? <a href="#" class="text-color-primary text-underline"> Reset Password</a>
+                    Forgot your password? <a href="#" class="text-color-primary text-decoration-none"> Reset Password</a>
                 </p>
                 </div>
             </div>
@@ -42,3 +55,4 @@
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <?php include 'footer.php'?></body>
 </html>
+<?php endif;?>

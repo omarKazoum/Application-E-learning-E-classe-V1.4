@@ -12,6 +12,12 @@ class DBContract
     public static string $Students_Col_EnrollNbr='enrollNbr';
     public static string $Students_Col_DateAdmission='dateAdmission';
     public static $Students_ProfileImgAcceptedTypes=['jpg','png','gif','jpeg'];
+    //for users table
+    public static string $Users_TableName='users';
+    public static string $Users_Col_Id='id';
+    public static string $Users_Col_Email='email';
+    public static string $Users_Col_UserName='name';
+    public static string $Users_Col_Password='pass';
     //for payment_details table
     public static string $PaymentDetails_TableName='payments_details';
     public static string $PaymentDetails_Col_Id='id';
