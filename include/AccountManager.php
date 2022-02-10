@@ -2,6 +2,7 @@
 require_once 'include/config.php';
 require_once 'include/DBManager.php';
 require_once 'include/DBContract.php';
+require_once 'include/InputValidator.php';
 class AccountManager
 {
     private const  CONNECTED_USER_ID_KEY='connected_user_id';
@@ -10,12 +11,14 @@ class AccountManager
     private static ?AccountManager $instance=null;
     private function __construct()
     {
+
         global $session_time_out_minutes;
         //this line has no effect as it's not taken into account by the server
         $server_result=ini_set('session.gc_maxlifetime', $session_time_out_minutes*60);
         // each client should remember their session id for for a certain number of seconds
         $client_result=session_set_cookie_params($session_time_out_minutes*60);
         session_start();
+        InputValidator::flushErrors();
         $this->logged_in=isset($_SESSION[self::CONNECTED_USER_ID_KEY]) AND !empty($_SESSION[self::CONNECTED_USER_ID_KEY]);
         if($this->logged_in){
             $this->connectedUserId=$_SESSION[self::CONNECTED_USER_ID_KEY];
@@ -26,10 +29,12 @@ class AccountManager
         global $session_time_out_minutes;
         // server should keep session data for a certain number of seconds
         $_SESSION[self::CONNECTED_USER_ID_KEY]=$userId;
-        echo 'suer id '.$_SESSION[self::CONNECTED_USER_ID_KEY];
+        //echo 'suer id '.$_SESSION[self::CONNECTED_USER_ID_KEY];
+
 
     }
     public function logOut(){
+        session_unset();
         session_destroy();
     }
     public function isLoggedIn():bool{

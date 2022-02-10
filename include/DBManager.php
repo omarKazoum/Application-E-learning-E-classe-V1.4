@@ -14,6 +14,7 @@ class DBManager
 
     private function __construct()
     {
+
     }
     public static function getInstance(){
          if(!DBManager::$instance){
@@ -124,7 +125,7 @@ class DBManager
      */
     public function getUserById(int $userId)
     {
-        $sql='SELECT * FROM '.DBContract::$Users_TableName;
+        $sql='SELECT * FROM '.DBContract::$Users_TableName.' WHERE '.DBContract::$Users_Col_Id.'='.$userId;
         $res=DBManager::$db_connection->query($sql)->fetch_assoc();
         if($res) {
             $user = new User();
@@ -139,7 +140,23 @@ class DBManager
 
 
     }
+    public function getUserByEmail(string $userEmail){
+        $sql='SELECT * FROM '.DBContract::$Users_TableName.' WHERE '.DBContract::$Users_Col_Email."=?";
+        $statment=DBManager::$db_connection->prepare($sql);
+        $statment->bind_param('s',$userEmail);
+        if($statment->execute()) {
+            $row=$statment->get_result()->fetch_assoc();
+            $user = new User();
+            $user->setId($row[DBContract::$Users_Col_Id]);
+            $user->setEmail($row[DBContract::$Users_Col_Email]);
+            $user->setPasswordHash($row[DBContract::$Users_Col_PasswordHash]);
+            $user->setUserName($row[DBContract::$Users_Col_UserName]);
+            return $user;
+        }else{
+            return null;
+        }
 
+    }
     /**
      * unused
      * @return DBManager|null
@@ -415,9 +432,7 @@ class DBManager
     public function getPaymentById(int $paymentId):array{
         $query='SELECT * FROM '.DBContract::$PaymentDetails_TableName.' WHERE '.DBContract::$PaymentDetails_Col_Id.' ='.$paymentId;
         $result=DBManager::$db_connection->query($query);
-        //$statment->bind_param('i',$paymentId);
         $payment=null;
-        //$result=$statment->execute();
         while ($row =$result->fetch_assoc())
             $payment=array(
                 DBContract::$PaymentDetails_Col_Id=>$row[DBContract::$PaymentDetails_Col_Id],

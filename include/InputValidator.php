@@ -7,7 +7,12 @@ class InputValidator
     public  const EMAIL_ERROR_KEY='email';
     public  const PASSWORD_PATTERN='/^[\w\*\$@\+\.\,]{8,}$/';
     public  const EMAIL_PATTERN='/^([\w]{1,30})@([\w]{1,20})\.([\w]{1,20})$/';
-
+    public  static $error_keys=[self::PASSWORD_ERROR_KEY,self::EMAIL_ERROR_KEY];
+    public static function flushErrors(){
+        foreach (InputValidator::$error_keys as $ek){
+            unset($_SESSION[self::INPUT_VALIDATOR_ERRORS][$ek]);
+        }
+    }
     /**
      * validates the password against this criteria:
      * <ul>
@@ -51,6 +56,9 @@ class InputValidator
             </ul>
         TEXT;
         return $res;
+    }
+    public static function getErrorMessage(string $input_name){
+        return isset($_SESSION[InputValidator::INPUT_VALIDATOR_ERRORS][InputValidator::PASSWORD_ERROR_KEY])?$_SESSION[InputValidator::INPUT_VALIDATOR_ERRORS][InputValidator::PASSWORD_ERROR_KEY]:false;
     }
 
 }

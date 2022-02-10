@@ -2,14 +2,29 @@
 require_once 'include/DBContract.php';
 require_once 'include/AccountManager.php';
 require_once 'include/DBManager.php';
+require_once 'include/InputValidator.php';
+//TODO:: fix the login scenario
 $am=AccountManager::getInstance();
-if($am->isLoggedIn()):
+$db_manager=DBManager::getInstance();
+if($am->isLoggedIn()){
     header('location:Dashboard.php');
-elseif($_SERVER['REQUEST_METHOD']=='POST'):
+}
+if($_SERVER['REQUEST_METHOD']=='POST' AND isset($_POST[DBContract::$Users_Col_Email]) AND isset($_POST[DBContract::$Users_Password])){
     //let's process submitted info
-      $db_manager->getUserbyEmail();
-else:
-?>
+    $email = $_POST[DBContract::$Users_Col_Email];
+    $pass = $_POST[DBContract::$Users_Password];
+    $user = null;
+    if (InputValidator::validateEmail($email) and InputValidator::validatePassword($pass) ) {
+        if($user = $db_manager->getUserByEmail($email) AND password_verify($pass,$user->getPasswordHash())){
+            //TODO:: check if the password is correct
+            $am->login($user->getId());
+            header('location:Dashboard.php');
+        }else{
+            $user_error=1;
+        }
+    }
+}
+    ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -31,14 +46,29 @@ else:
                 <p class="text-center text-gray">
                     Enter your credentials to access your account
                 </p>
+                    <?php if(isset($user_error)){ ?>
+                        <div class="alert alert-danger">
+                            Invalid credentials check your spelling and try again !
+                        </div>
+                    <?php }?>
                 <form action="index.php" method="POST">
+                    <?php if(InputValidator::getErrorMessage(InputValidator::EMAIL_ERROR_KEY)):?>
+                        <div class="alert alert-danger">
+                            <?=InputValidator::getErrorMessage(InputValidator::EMAIL_ERROR_KEY) ?>
+                        </div>
+                    <?php endif;?>
                     <div class="form-group">
                         <label for="<?= DBContract::$Users_Col_Email ?>">Email</label>
-                        <input type="email" class="form-control" id="<?= DBContract::$Users_Col_Email ?>" name="<?= DBContract::$Users_Col_Email ?>" placeholder="Enter your email">
+                        <input type="email" class="form-control" value="<?= isset($_POST[DBContract::$Users_Col_Email])?$_POST[DBContract::$Users_Col_Email]:'' ?>" id="<?= DBContract::$Users_Col_Email ?>" name="<?= DBContract::$Users_Col_Email ?>" placeholder="Enter your email">
                     </div>
+                    <?php if(InputValidator::getErrorMessage(InputValidator::PASSWORD_ERROR_KEY)):?>
+                        <div class="alert alert-danger">
+                            <?=InputValidator::getErrorMessage(InputValidator::PASSWORD_ERROR_KEY) ?>
+                        </div>
+                    <?php endif;?>
                     <div class="form-group">
-                        <label for="<?= DBContract::$Users_Col_Password ?>">Password</label>
-                        <input type="password" class="form-control" name="<?= DBContract::$Users_Col_Password ?>" id="<?= DBContract::$Users_Col_Password ?>" placeholder="Enter your password">
+                        <label for="<?= DBContract::$Users_Password ?>">Password</label>
+                        <input type="password" class="form-control" value="<?= isset($_POST[DBContract::$Users_Password])?$_POST[DBContract::$Users_Password]:'' ?>" name="<?= DBContract::$Users_Password ?>" id="<?= DBContract::$Users_Password ?>" placeholder="Enter your password">
                     </div>
                     <input type="submit" class="form-control btn bg-primary text-light py-2" value="SIGN IN">
                 </form>
@@ -55,4 +85,3 @@ else:
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <?php include 'footer.php'?></body>
 </html>
-<?php endif;?>
