@@ -1,6 +1,8 @@
 <?php
 require_once 'include/DBManager.php';
 require_once 'include/utils.php';
+redirectToLoginIfnotLogged();
+
 $db_manager=DBManager::getInstance();
 $ACTION_COURSES_LIST='courses_view';
 $ACTION_COURSES_EDIT_FORM='cef';

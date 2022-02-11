@@ -1,11 +1,12 @@
 <?php
-require_once 'config.php';
+require_once 'config/config.php';
 require_once 'DBContract.php';
 require_once 'include/User.php';
 
     ini_set('display_errors', !PRODUCTION);
     ini_set('display_startup_errors', !PRODUCTION);
-    error_reporting((!PRODUCTION) ?E_ALL:0);
+    error_reporting(!PRODUCTION ?E_ALL:0);
+
 class DBManager
 {
     private static ?DBManager $instance=null;
@@ -144,8 +145,10 @@ class DBManager
         $sql='SELECT * FROM '.DBContract::$Users_TableName.' WHERE '.DBContract::$Users_Col_Email."=?";
         $statment=DBManager::$db_connection->prepare($sql);
         $statment->bind_param('s',$userEmail);
-        if($statment->execute()) {
-            $row=$statment->get_result()->fetch_assoc();
+        $row=null;
+        $statment->execute();
+        $result=$statment->get_result();
+        if( $row=$result->fetch_assoc()) {
             $user = new User();
             $user->setId($row[DBContract::$Users_Col_Id]);
             $user->setEmail($row[DBContract::$Users_Col_Email]);
@@ -466,6 +469,7 @@ class DBManager
         return $c!=null? $c:0;
     }
     public function getUsersCount(){
-        return $this->getStudentsCount();
+        $count_users_query='SELECT COUNT(*) AS count FROM '.DBContract::$Users_TableName;
+        return DBManager::$db_connection->query($count_users_query)->fetch_assoc()['count'];
     }
 }

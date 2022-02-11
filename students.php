@@ -1,7 +1,8 @@
 <?php
-
 require_once 'include/DBManager.php';
 require_once 'include/utils.php';
+require_once 'include/utils.php';
+redirectToLoginIfnotLogged();
 $db_manager=DBManager::getInstance();
 $ORDER_BY_KEY='ob';
 $ORDER_BY_ASC='oba';
@@ -13,23 +14,20 @@ $ACTION_ADD_SUBMIT='aas';
 $ACTION_EDIT='ase';
 $ACTION_EDIT_SUBMIT='ases';
 $ACTION_GET_KEY='a';
-$action=isset($_GET[$ACTION_GET_KEY])?$_GET[$ACTION_GET_KEY]:$ACTION_VIEW;
+$action=$_GET[$ACTION_GET_KEY]??$ACTION_VIEW;
 $USER_ADD_SUCCESS='user-add-success';
 $USER_ADD_FAILED='user-add-failed';
 $USER_ADD_NOT_SET=false;
 $USER_ADD_KEY='user-add';
-$user_add_result=isset($_GET[$USER_ADD_KEY])?$_GET[$USER_ADD_KEY]:$USER_ADD_NOT_SET;
+$user_add_result=$_GET[$USER_ADD_KEY]??$USER_ADD_NOT_SET;
 //saving newly added student
 $user_delete_key='user_delete';
 if($action==$ACTION_ADD_SUBMIT) {
     if (areAllStudentAddFieldsSetAndValid()) {
-        // let's handle the image download if it's provided
         $path=upload_profile_image();
         if(!$path){
-            //the image is not of a valid format
             die('invalid image');
         }
-
         $db_manager->insertStudent(array(
             DBContract::$Students_Col_Name=>$_POST[DBContract::$Students_Col_Name],
             DBContract::$Students_Col_Image=>$path,
@@ -42,7 +40,7 @@ if($action==$ACTION_ADD_SUBMIT) {
     } else
         $user_add_result = $USER_ADD_FAILED;
 }else
-    $user_add_result=isset($_GET[$USER_ADD_KEY])?$_GET[$USER_ADD_KEY]:$USER_ADD_NOT_SET;
+    $user_add_result=$_GET[$USER_ADD_KEY]??$USER_ADD_NOT_SET;
 
 
 ?>
@@ -58,7 +56,6 @@ if($action==$ACTION_ADD_SUBMIT) {
 </head>
 <body>
 <main class="container-fluid bg-gray">
-
     <div class="row">
         <?php include 'sidebar.php';?>
         <div class="col content">
@@ -221,7 +218,7 @@ if($action==$ACTION_ADD_SUBMIT) {
                                                 }
                                 elseif($action==$ACTION_EDIT_SUBMIT){
                                     //now that we have the updated data let's save it
-                                    $selected_student_id=isset($_GET[DBContract::$Students_Col_Id])?$_GET[DBContract::$Students_Col_Id]:false;
+                                    $selected_student_id=$_GET[DBContract::$Students_Col_Id]??false;
                                         if(!$selected_student_id){
                                             echo 'no student id specified !';
                                             exit();

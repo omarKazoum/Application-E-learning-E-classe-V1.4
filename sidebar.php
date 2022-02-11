@@ -1,13 +1,17 @@
-<?php $active_class='bg-primary'; ?>
+<?php $active_class='bg-primary';
+require_once 'include/AccountManager.php';
+require_once 'include/DBManager.php';
+$user=DBManager::getInstance()->getUserById(AccountManager::getInstance()->getLoggedInUserId());
+?>
 <div class="toggle col-2 col-sm-3 sidebar p-1 p-md-3">
     <h1 class="text-left border-start border-3 border-md-4 border-primary ps-md-2 fw-bold fs-6 mb-3 mb-md-0">E-classe</h1>
     <div class="w-100 px-md-5 mx-auto d-flex flex-column align-items-center mt-md-5 mb-md-2">
         <img src="images/dashboard-round-img.png" alt="" class="img-round w-100 h-100 shadow">
-        <span class="h5 text-center w-100 mt-3 d-none d-md-block fw-bold fs-6">Admin name</span>
+        <span class="h5 text-center w-100 mt-3 d-none d-md-block fw-bold fs-6"><?= $user->getUserName()?></span>
         <span class="h6 text-primary fw-bolder mt-3 d-none d-md-block fs-7">Admin</span>
     </div>
     <div class="menu-options-con row w-100 px-lg-5 mx-auto py-md-5 py-2 mt-3 mt-md-0 ">
-        <a title="Home" href="Dashboard.php" class="btn gap-2 <?php if(basename($_SERVER['SCRIPT_NAME'])=='Dashboard.php')echo $active_class;else ?> mb-4 d-flex justify-content-md-between justify-content-center w-100 align-items-center">
+        <a title="Home" href="dashboard.php" class="btn gap-2 <?php if(basename($_SERVER['SCRIPT_NAME'])=='dashboard.php')echo $active_class;else ?> mb-4 d-flex justify-content-md-between justify-content-center w-100 align-items-center">
             <span class="ic ic-home"></span>
             <p class="w-75 text-start m-0 d-none d-md-block">
                 Home

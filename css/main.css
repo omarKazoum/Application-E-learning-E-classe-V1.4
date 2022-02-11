@@ -98,8 +98,9 @@ body {
 .text-primary{
     color: var(--color-primary-blue) !important;
 }
-.form-group{
+.form-group,.form-check{
     margin-bottom: 3rem !important;
+
 }
 .text-underline{
     text-decoration: underline !important;

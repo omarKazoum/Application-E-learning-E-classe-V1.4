@@ -1,8 +1,10 @@
 <?php
+require_once 'include/AccountManager.php';
+require_once 'include/DBContract.php';
 /**
  * repetitive code amongst all the pages
  **/
- $ORDER_KEY='o';
+$ORDER_KEY='o';
 $ORDER_ASC='ASC';
 $ORDER_DESC='DESC';
 $order_value=isset($_GET[$ORDER_KEY]) && ($_GET[$ORDER_KEY] ==$ORDER_ASC OR $_GET[$ORDER_KEY] ==$ORDER_DESC )? $_GET[$ORDER_KEY]:$ORDER_DESC;
@@ -69,4 +71,25 @@ function upload_profile_image($img_old_name=false):string{
             return false;
     }
     return $new_path;
+}
+function redirectToLoginIfnotLogged(){
+    if(!AccountManager::getInstance()->isLoggedIn()){
+        header('location:index.php');
+    }
+}
+function saveLoginDataInACookie(){
+    $cookie_life_time_seconds=365*24*60*60;
+    setcookie(DBContract::$Users_RememberMe, isset($_POST[DBContract::$Users_RememberMe]),time()+$cookie_life_time_seconds,'/','',false,true);
+    setcookie(DBContract::$Users_RememberMe_Email,$_POST[DBContract::$Users_Col_Email],time()+$cookie_life_time_seconds,'/','',false,true);
+    setcookie(DBContract::$Users_RememberMe_Pass,$_POST[DBContract::$Users_Password],time()+$cookie_life_time_seconds,'/','',false,true);
+}
+function deleteLoginDataInCookie(){
+    setcookie(DBContract::$Users_RememberMe,'',time()-10);
+    setcookie(DBContract::$Users_RememberMe_Email,'',time()-10);
+    setcookie(DBContract::$Users_RememberMe_Pass,'',time()-10);
+}
+function loadLoggingDataFromACookie(){
+    $GLOBALS[DBContract::$Users_RememberMe_Email]=$_COOKIE[DBContract::$Users_RememberMe_Email]??null;
+    $GLOBALS[DBContract::$Users_RememberMe_Pass]=$_COOKIE[DBContract::$Users_RememberMe_Pass]??null;
+    $GLOBALS[DBContract::$Users_RememberMe]=$_COOKIE[DBContract::$Users_RememberMe]??false;
 }

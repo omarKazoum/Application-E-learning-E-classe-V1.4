@@ -1,5 +1,5 @@
 <?php
-require_once 'include/config.php';
+require_once 'config/config.php';
 require_once 'include/DBManager.php';
 require_once 'include/DBContract.php';
 require_once 'include/InputValidator.php';
@@ -11,7 +11,6 @@ class AccountManager
     private static ?AccountManager $instance=null;
     private function __construct()
     {
-
         global $session_time_out_minutes;
         //this line has no effect as it's not taken into account by the server
         $server_result=ini_set('session.gc_maxlifetime', $session_time_out_minutes*60);
@@ -24,7 +23,6 @@ class AccountManager
             $this->connectedUserId=$_SESSION[self::CONNECTED_USER_ID_KEY];
         }
     }
-
     public function login(string $userId){
         global $session_time_out_minutes;
         // server should keep session data for a certain number of seconds
@@ -40,8 +38,9 @@ class AccountManager
     public function isLoggedIn():bool{
         return $this->logged_in;
     }
-
-    /**
+    public function getLoggedInUserId(){
+        return $this->connectedUserId;
+    }  /**
      * creates a new instance and stores it in the $instance static variable
      * @return AccountManager
      */

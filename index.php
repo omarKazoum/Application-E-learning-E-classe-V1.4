@@ -3,11 +3,12 @@ require_once 'include/DBContract.php';
 require_once 'include/AccountManager.php';
 require_once 'include/DBManager.php';
 require_once 'include/InputValidator.php';
+require_once 'include/utils.php';
 //TODO:: fix the login scenario
 $am=AccountManager::getInstance();
 $db_manager=DBManager::getInstance();
 if($am->isLoggedIn()){
-    header('location:Dashboard.php');
+    header('location:dashboard.php');
 }
 if($_SERVER['REQUEST_METHOD']=='POST' AND isset($_POST[DBContract::$Users_Col_Email]) AND isset($_POST[DBContract::$Users_Password])){
     //let's process submitted info
@@ -16,14 +17,19 @@ if($_SERVER['REQUEST_METHOD']=='POST' AND isset($_POST[DBContract::$Users_Col_Em
     $user = null;
     if (InputValidator::validateEmail($email) and InputValidator::validatePassword($pass) ) {
         if($user = $db_manager->getUserByEmail($email) AND password_verify($pass,$user->getPasswordHash())){
-            //TODO:: check if the password is correct
+            if(isset($_POST[DBContract::$Users_RememberMe]))
+                saveLoginDataInACookie();
+            else
+                deleteLoginDataInCookie();
             $am->login($user->getId());
-            header('location:Dashboard.php');
+            header('location:dashboard.php');
+            $redirect=1;
         }else{
             $user_error=1;
         }
     }
 }
+loadLoggingDataFromACookie();
     ?>
 
 <!DOCTYPE html>
@@ -52,23 +58,27 @@ if($_SERVER['REQUEST_METHOD']=='POST' AND isset($_POST[DBContract::$Users_Col_Em
                         </div>
                     <?php }?>
                 <form action="index.php" method="POST">
-                    <?php if(InputValidator::getErrorMessage(InputValidator::EMAIL_ERROR_KEY)):?>
+                        <?php if(InputValidator::error(InputValidator::EMAIL_ERROR_KEY)):?>
                         <div class="alert alert-danger">
-                            <?=InputValidator::getErrorMessage(InputValidator::EMAIL_ERROR_KEY) ?>
+                            <?=InputValidator::error(InputValidator::EMAIL_ERROR_KEY) ?>
                         </div>
                     <?php endif;?>
                     <div class="form-group">
                         <label for="<?= DBContract::$Users_Col_Email ?>">Email</label>
-                        <input type="email" class="form-control" value="<?= isset($_POST[DBContract::$Users_Col_Email])?$_POST[DBContract::$Users_Col_Email]:'' ?>" id="<?= DBContract::$Users_Col_Email ?>" name="<?= DBContract::$Users_Col_Email ?>" placeholder="Enter your email">
+                        <input type="email" class="form-control <?= InputValidator::error(InputValidator::EMAIL_ERROR_KEY)?'border-danger border':'' ?> " value="<?= $_POST[DBContract::$Users_Col_Email]??$GLOBALS[DBContract::$Users_RememberMe_Email]??'' ?>" id="<?= DBContract::$Users_Col_Email ?>" name="<?= DBContract::$Users_Col_Email ?>" placeholder="Enter your email">
                     </div>
-                    <?php if(InputValidator::getErrorMessage(InputValidator::PASSWORD_ERROR_KEY)):?>
+                    <?php if(InputValidator::error(InputValidator::PASSWORD_ERROR_KEY)):?>
                         <div class="alert alert-danger">
-                            <?=InputValidator::getErrorMessage(InputValidator::PASSWORD_ERROR_KEY) ?>
+                            <?=InputValidator::error(InputValidator::PASSWORD_ERROR_KEY) ?>
                         </div>
                     <?php endif;?>
                     <div class="form-group">
                         <label for="<?= DBContract::$Users_Password ?>">Password</label>
-                        <input type="password" class="form-control" value="<?= isset($_POST[DBContract::$Users_Password])?$_POST[DBContract::$Users_Password]:'' ?>" name="<?= DBContract::$Users_Password ?>" id="<?= DBContract::$Users_Password ?>" placeholder="Enter your password">
+                        <input type="password" class="<?= InputValidator::error(InputValidator::PASSWORD_ERROR_KEY)?'border-danger border':'' ?> form-control" value="<?= $_POST[DBContract::$Users_Password]??$GLOBALS[DBContract::$Users_RememberMe_Pass]??'' ?>" name="<?= DBContract::$Users_Password ?>" id="<?= DBContract::$Users_Password ?>" placeholder="Enter your password">
+                    </div>
+                    <div class="form-check">
+                        <label for="<?= DBContract::$Users_RememberMe ?>" class="form-check-label">Remember me</label>
+                         <input type="checkbox" class="form-check-input" <?= (isset($_POST[DBContract::$Users_RememberMe]) OR $GLOBALS[DBContract::$Users_RememberMe]) ?'checked':'' ?> name="<?= DBContract::$Users_RememberMe ?>" id="<?= DBContract::$Users_RememberMe ?>">
                     </div>
                     <input type="submit" class="form-control btn bg-primary text-light py-2" value="SIGN IN">
                 </form>
@@ -81,6 +91,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' AND isset($_POST[DBContract::$Users_Col_Em
     </div>
 
 </main>
+<?php if(isset($redirect)) redirect_with_js('dashboard.php');?>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <?php include 'footer.php'?></body>

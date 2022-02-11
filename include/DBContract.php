@@ -1,5 +1,5 @@
 <?php
-require_once 'config.php';
+require_once 'config/config.php';
 class DBContract
 {
     // for students table
@@ -19,6 +19,9 @@ class DBContract
     public static string $Users_Col_UserName='name';
     public static string $Users_Col_PasswordHash='pass_hash';
     public static string $Users_Password='pass';
+    public static string $Users_RememberMe='rememberme';
+    public static string $Users_RememberMe_Email='rememberme_email';
+    public static string $Users_RememberMe_Pass='rememberme_pass';
     //for payment_details table
     public static string $PaymentDetails_TableName='payments_details';
     public static string $PaymentDetails_Col_Id='id';

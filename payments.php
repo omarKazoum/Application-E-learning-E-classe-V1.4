@@ -1,10 +1,11 @@
 <?php
 require_once 'include/DBManager.php';
 require_once 'include/utils.php';
+redirectToLoginIfnotLogged();
 $ACTION_VIEW_PAYMENTS_LIST='avpl';
 $ACTION_VIEW_PAYMENT_DETAILS='avpd';
 $ACTION_KEY='a';
-$action=isset($_GET[$ACTION_KEY])?$_GET[$ACTION_KEY]:$ACTION_VIEW_PAYMENTS_LIST;
+$action=$_GET[$ACTION_KEY]??$ACTION_VIEW_PAYMENTS_LIST;
 ?>
 <!DOCTYPE html>
 <html lang="en">
