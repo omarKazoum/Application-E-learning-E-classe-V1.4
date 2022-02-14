@@ -57,10 +57,16 @@ $action=$_GET[$ACTION_KEY]??$ACTION_VIEW_PAYMENTS_LIST;
                 <?php
                     // let's load data from database
                     $payments=DBManager::getInstance()->getAllPayments($order_value);
+                   if($payments==null OR count($payments)==0){?>
+                        <div class="alert alert-warning">
+                            There are no payments to be displayed !
+                        </div>
+                <?php }
                     // now let's print the data
                     foreach($payments as $payment){
                 ?>
                 <div class="col-12">
+
                     <div class="card">
                         <div class="card-body row d-flex flex-column flex-lg-row">
                             <span class="col-lg-1 text-start">
