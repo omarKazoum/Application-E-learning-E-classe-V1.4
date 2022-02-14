@@ -1,13 +1,8 @@
 <?php
 require_once 'include/DBManager.php';
 require_once 'include/utils.php';
-require_once 'include/utils.php';
 redirectToLoginIfnotLogged();
 $db_manager=DBManager::getInstance();
-$ORDER_BY_KEY='ob';
-$ORDER_BY_ASC='oba';
-$ORDER_BY_DESC='obd';
-$ACTION_VIEW='av';
 $ACTION_VIEW='av';
 $ACTION_ADD_FORM='aaf';
 $ACTION_ADD_SUBMIT='aas';
