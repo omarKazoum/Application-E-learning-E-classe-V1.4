@@ -24,3 +24,8 @@
 .card-students{
     speak: literal-punctuation;
 }
+.student-profile-image{
+    width:2rem !important;
+    height: 2rem !important;
+    background-color: red;
+}
