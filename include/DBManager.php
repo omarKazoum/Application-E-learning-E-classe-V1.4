@@ -106,6 +106,7 @@ class DBManager
             $r1=DBManager::$db_connection->query($students_table_query);
             $r2=DBManager::$db_connection->query($payments_table_query);
             $r3=DBManager::$db_connection->query($courses_table_query);
+            $r4=DBManager::$db_connection->query($users_table_query);
             return $r1 && $r2 && $r3;
         }
 
