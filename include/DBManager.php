@@ -5,7 +5,7 @@ require_once 'include/User.php';
 
     ini_set('display_errors', !PRODUCTION);
     ini_set('display_startup_errors', !PRODUCTION);
-    error_reporting(!PRODUCTION ?E_ALL:0);
+    error_reporting(!PRODUCTION ?E_ALL:E_ERROR);
 
 class DBManager
 {
