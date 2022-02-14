@@ -106,8 +106,8 @@ if($action==$ACTION_ADD_SUBMIT) {
                             <div class="col-12">
                                  <div class="card shadow">
                                 <div class="card-body d-flex flex-column flex-md-row">
-                                    <span class="col-md-1 col-auto">
-                                        <img src="<?= $student[DBContract::$Students_Col_Image]?>" alt="" class="w-100">
+                                    <span class="col-md-1 col-auto d-flex justify-content-center">
+                                        <img src="<?= $student[DBContract::$Students_Col_Image]?>" alt="" class="w-100 student-profile-image">
                                     </span>
                                     <span class="col-md-2 text-start">
                                         <?= $student[DBContract::$Students_Col_Name]?>
