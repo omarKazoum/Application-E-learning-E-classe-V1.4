@@ -27,10 +27,7 @@ class InputValidator
         if(!$res)
         $_SESSION[self::INPUT_VALIDATOR_ERRORS][self::PASSWORD_ERROR_KEY]=<<<TEXT
             <ul>
-            <li>must contain at least one lower case character a-z</li>
-            <li>must contain at least one upper case character A-Z</li>
-            <li>must contain at least one number 0-9 </li>
-            <li>must contain at least one special charachter @,&lt;,>,/,\,$ </li>
+                <li>Invalide password</li>
             </ul>
         TEXT;
         return $res;
