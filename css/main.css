@@ -99,7 +99,7 @@ body {
     color: var(--color-primary-blue) !important;
 }
 .form-group,.form-check{
-    margin-bottom: 3rem !important;
+    margin-bottom: 1rem !important;
 
 }
 .text-underline{
