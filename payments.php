@@ -1,7 +1,7 @@
 <?php
 require_once 'include/DBManager.php';
 require_once 'include/utils.php';
-redirectToLoginIfnotLogged();
+redirectToLoginIfNotLogged();
 $ACTION_VIEW_PAYMENTS_LIST='avpl';
 $ACTION_VIEW_PAYMENT_DETAILS='avpd';
 $ACTION_KEY='a';

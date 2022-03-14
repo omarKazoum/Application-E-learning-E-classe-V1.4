@@ -13,9 +13,9 @@ class AccountManager
     {
         global $session_time_out_minutes;
         //this line has no effect as it's not taken into account by the server
-        $server_result=ini_set('session.gc_maxlifetime', 60*60*24);
+        ini_set('session.gc_maxlifetime', 60*$session_time_out_minutes);
         // each client should remember their session id for for a certain number of seconds
-        $client_result=session_set_cookie_params(60*60*24);
+        session_set_cookie_params(60*$session_time_out_minutes);
         session_start();
         InputValidator::flushErrors();
         $this->logged_in=isset($_SESSION[self::CONNECTED_USER_ID_KEY]) AND !empty($_SESSION[self::CONNECTED_USER_ID_KEY]);
@@ -23,6 +23,13 @@ class AccountManager
             $this->connectedUserId=$_SESSION[self::CONNECTED_USER_ID_KEY];
         }
     }
+
+    /**
+     * helps you log in
+     * @param string $userId
+     * @return void
+     *
+     */
     public function login(string $userId){
         global $session_time_out_minutes;
         // server should keep session data for a certain number of seconds
@@ -38,6 +45,11 @@ class AccountManager
     public function isLoggedIn():bool{
         return $this->logged_in;
     }
+
+    /**
+     * returns the id of the current logged in user
+     * @return mixed|string
+     */
     public function getLoggedInUserId(){
         return $this->connectedUserId;
     }  /**

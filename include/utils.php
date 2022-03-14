@@ -72,9 +72,10 @@ function upload_profile_image($img_old_name=false):string{
     }
     return $new_path;
 }
-function redirectToLoginIfnotLogged(){
+function redirectToLoginIfNotLogged(){
     if(!AccountManager::getInstance()->isLoggedIn()){
         header('location:index.php');
+        exit();
     }
 }
 function saveLoginDataInACookie(){

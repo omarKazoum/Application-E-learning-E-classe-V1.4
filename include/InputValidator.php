@@ -13,10 +13,10 @@ class InputValidator
     /**
      * validates the password against this criteria:
      * <ul>
-     *  <li>must contain at least one lower case character a-z</li>
-     *  <li>must contain at least one upper case character A-Z</li>
-     *  <li>must contain at least one number 0-9 </li>
-     *  <li>must contain at least one special charachter .<b>.</b>,@,&lt;,>,/,\,$ </li>
+     *  <li>can contain at least one lower case character a-z</li>
+     *  <li>can contain at least one upper case character A-Z</li>
+     *  <li>can contain at least one number 0-9 </li>
+     *  <li>can contain at least a special character .<b>.</b>,@,&lt;,>,/,\,$ </li>
      * </ul>
      * <b>In Regex: <code>/^[\w\*\$@\+\.\,]{8,}$/</code></b>
      * @param string $password
