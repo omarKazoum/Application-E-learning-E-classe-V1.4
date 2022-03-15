@@ -1,8 +1,8 @@
 <?php
-require_once 'config/config.php';
-require_once 'include/DBManager.php';
-require_once 'include/DBContract.php';
-require_once 'include/InputValidator.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/config/config.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/include/DBManager.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/include/DBContract.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/include/InputValidator.php';
 class AccountManager
 {
     private const  CONNECTED_USER_ID_KEY='connected_user_id';

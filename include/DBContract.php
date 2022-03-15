@@ -1,5 +1,5 @@
 <?php
-require_once 'config/config.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/config/config.php';
 class DBContract
 {
     // for students table

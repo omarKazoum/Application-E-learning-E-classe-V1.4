@@ -1,8 +1,8 @@
 <?php
-require_once 'config/config.php';
-require_once 'DBContract.php';
-require_once 'include/User.php';
-require_once 'include/Student.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/config/config.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/include/DBContract.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/include/User.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/include/Student.php';
     ini_set('display_errors', !PRODUCTION);
     ini_set('display_startup_errors', !PRODUCTION);
     error_reporting(!PRODUCTION ?E_ALL:E_ERROR);
