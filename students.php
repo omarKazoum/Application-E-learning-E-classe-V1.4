@@ -137,6 +137,7 @@ if($action==$ACTION_ADD_SUBMIT) {
                         </div>
             <?php }
                                 elseif($action==$ACTION_ADD_FORM){
+                             //TODO:: password hash is now added to the requirments to insert a student
                                 ?>
                                 <form action="students.php?<?=$ACTION_GET_KEY.'='.$ACTION_ADD_SUBMIT?>" method="post" class=" col-12 col-md-6 offset-md-3" enctype="multipart/form-data">
                                     <h1 class="h5 fw-bold">Add a new Student</h1>

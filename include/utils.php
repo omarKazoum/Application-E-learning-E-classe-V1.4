@@ -10,9 +10,24 @@ $ORDER_DESC='DESC';
 $order_value=isset($_GET[$ORDER_KEY]) && ($_GET[$ORDER_KEY] ==$ORDER_ASC OR $_GET[$ORDER_KEY] ==$ORDER_DESC )? $_GET[$ORDER_KEY]:$ORDER_DESC;
 $order_value_opposite=$order_value==$ORDER_ASC?$ORDER_DESC:$ORDER_ASC;
 
+const MESSAGE_TYPE_KEY='message_type';
+const MESSAGE_TYPE_SUCCESS='message_type_succes';
+const MESSAGE_TYPE_ERROR='message_type_error';
+const MESSAGE_TXT_KEY='message_text';
 
 function areAllStudentAddFieldsSetAndValid():bool{
     $studentFields=array(DBContract::$Students_Col_Name,DBContract::$Students_Col_Email,DBContract::$Students_Col_Phone);
+    return areAllFieldsSet($studentFields,'POST');
+}
+function AreAllStudentSignUpFieldsSet():bool{
+    $studentFields=array(
+        DBContract::$Students_Col_Name,
+        DBContract::$Students_Col_Email,
+        DBContract::$Students_Col_Email2,
+        DBContract::$Students_Col_Phone,
+        DBContract::$Students_Col_Password,
+        DBContract::$Students_Col_Password2,
+    );
     return areAllFieldsSet($studentFields,'POST');
 }
 function areAllCourseFieldsSetAndValid():bool{
@@ -70,7 +85,7 @@ function upload_profile_image($img_old_name=false):string{
         } else
             return false;
     }
-    return $new_path;
+    return $new_path??'';
 }
 function redirectToLoginIfNotLogged(){
     if(!AccountManager::getInstance()->isLoggedIn()){
@@ -93,4 +108,16 @@ function loadLoggingDataFromACookie(){
     $GLOBALS[DBContract::$Users_RememberMe_Email]=$_COOKIE[DBContract::$Users_RememberMe_Email]??null;
     $GLOBALS[DBContract::$Users_RememberMe_Pass]=$_COOKIE[DBContract::$Users_RememberMe_Pass]??null;
     $GLOBALS[DBContract::$Users_RememberMe]=$_COOKIE[DBContract::$Users_RememberMe]??false;
+}
+function printMessageIfexists(){
+    if(isset($_GET[MESSAGE_TXT_KEY])){?>
+        <div class="alert alert-<?=
+        isset($_GET[MESSAGE_TYPE_KEY]) ?($_GET[MESSAGE_TYPE_KEY]==MESSAGE_TYPE_SUCCESS?'success':'danger'):'warning' ?>">
+            <?= $_GET[MESSAGE_TXT_KEY] ?? ''?>
+        </div>
+        <?php
+    }
+}
+function redirectWithMessage($url,$messageType,$message){
+    header("location:$url".(strpos($url,'?')!==false?'&':'?').MESSAGE_TXT_KEY.'='.$message.'&'.MESSAGE_TYPE_KEY.'='.$messageType);
 }

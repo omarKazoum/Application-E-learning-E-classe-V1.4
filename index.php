@@ -53,6 +53,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' AND isset($_POST[DBContract::$Users_Col_Em
                 <p class="text-center text-gray">
                     Enter your credentials to access your account
                 </p>
+                    <?php printMessageIfexists();?>
                     <?php if(isset($user_error)){ ?>
                         <div class="alert alert-danger">
                             Invalid credentials check your spelling and try again !

@@ -64,6 +64,10 @@ class AccountManager
             AccountManager::$instance=new AccountManager();
         return AccountManager::$instance;
     }
+    public function getLoggedInUser():User{
+        $db_manager=DBManager::getInstance();
+        return $this->isLoggedInUserAnAdmin() ? $db_manager->getUserById(connectedUserId): $db_manager->getStudentById(connectedUserId);
+    }
 
     public function isLoggedInUserAnAdmin()
     {

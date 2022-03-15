@@ -217,16 +217,19 @@ class DBManager
                 .DBContract::$Students_Col_Email.' ,'
                 .DBContract::$Students_Col_Phone.' ,'
                 .DBContract::$Students_Col_EnrollNbr.','
-                .DBContract::$Students_Col_DateAdmission.')'
-                .' VALUES(? , ?, ?, ?, ?,?)';
+                .DBContract::$Students_Col_DateAdmission.','
+                .DBContract::$Students_Col_PasswordHash
+            .')'
+                .' VALUES(? , ?, ?, ?, ?,?,?)';
         $statment=DBManager::$db_connection->prepare($query);
-        $statment->bind_param('ssssss',
+        $statment->bind_param('sssssss',
             $student[DBContract::$Students_Col_Name],
             $student[DBContract::$Students_Col_Image],
             $student[DBContract::$Students_Col_Email],
             $student[DBContract::$Students_Col_Phone],
             $student[DBContract::$Students_Col_EnrollNbr],
-            $student[DBContract::$Students_Col_DateAdmission]
+            $student[DBContract::$Students_Col_DateAdmission],
+            $student[DBContract::$Students_Col_PasswordHash]
         );
         $statment->execute();
     }

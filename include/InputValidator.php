@@ -5,8 +5,11 @@ class InputValidator
     public  const INPUT_VALIDATOR_ERRORS='validator_errors';
     public  const PASSWORD_ERROR_KEY='password';
     public  const EMAIL_ERROR_KEY='email';
-    public  const PASSWORD_PATTERN='/^[\w\*\$@\+\.\,]{8,}$/';
-    public  const EMAIL_PATTERN='/^([\w]{1,30})@([\w]{1,20})\.([\w]{1,20})$/';
+    public  const PASSWORD_PATTERN='/^.{8,100}$/';
+    public  const EMAIL_PATTERN='/^\w+@\w+(\.\w+)+$/';
+    public  const PHONE_PATTERN='/^\+?(212)|0[658]\d{8}$/';
+    public  const PHONE_ERROR_KEY ='phone' ;
+
     public static function flushErrors(){
             unset($_SESSION[self::INPUT_VALIDATOR_ERRORS]);
     }
@@ -24,12 +27,12 @@ class InputValidator
      */
     public static function validatePassword(string $password):bool{
         $res=preg_match(self::PASSWORD_PATTERN,$password);
-        if(!$res)
-        $_SESSION[self::INPUT_VALIDATOR_ERRORS][self::PASSWORD_ERROR_KEY]=<<<TEXT
-            <ul>
-                <li>Invalide password</li>
-            </ul>
-        TEXT;
+        if(!$res){
+            if(!isset($_SESSION[self::INPUT_VALIDATOR_ERRORS][self::PASSWORD_ERROR_KEY]))
+                $_SESSION[self::INPUT_VALIDATOR_ERRORS][self::PASSWORD_ERROR_KEY]="<li>Password must be at least 8 characters long</li>";
+            else
+                $_SESSION[self::INPUT_VALIDATOR_ERRORS][self::PASSWORD_ERROR_KEY].="<li>Password must be at least 8 characters long</li>";
+        }
         return $res;
     }
     /**
@@ -43,15 +46,43 @@ class InputValidator
      */
     public static function validateEmail(string $email):bool{
         $res=preg_match(self::EMAIL_PATTERN,$email);
-        if(!$res)
-            $_SESSION[self::INPUT_VALIDATOR_ERRORS][self::EMAIL_ERROR_KEY]=<<<TEXT
-            <ul>
-            <li>Invalid email address</li>
-            </ul>
-        TEXT;
+        if(!$res){
+            if(!isset($_SESSION[self::INPUT_VALIDATOR_ERRORS][self::EMAIL_ERROR_KEY]))
+                $_SESSION[self::INPUT_VALIDATOR_ERRORS][self::EMAIL_ERROR_KEY]="<li>Invalid email address</li>";
+            else
+                $_SESSION[self::INPUT_VALIDATOR_ERRORS][self::EMAIL_ERROR_KEY].="<li>Invalid email address</li>";
+        }
         return $res;
     }
-
+    public static function validateEmailsMatch(string $email1,string $email2){
+        $isEmailValide=self::validateEmail($email1);
+        $isMatch=$email1==$email2 ;
+        if(!$isMatch){
+            if(!isset($_SESSION[self::INPUT_VALIDATOR_ERRORS][self::EMAIL_ERROR_KEY]))
+                $_SESSION[self::INPUT_VALIDATOR_ERRORS][self::EMAIL_ERROR_KEY]="<li>Emails Must match</li>";
+            else
+                $_SESSION[self::INPUT_VALIDATOR_ERRORS][self::EMAIL_ERROR_KEY].="<li>Emails Must match</li>";
+        }
+        return $isMatch AND $isEmailValide;
+    }
+    public static function validatePasswordsMatch(string $password1,string $password2){
+        //TODO: fix this just like for email
+        $isPasswordValide=self::validatePassword($password1);
+        $isPasswordsMatch=$password1==$password2 ;
+        if(!$isPasswordsMatch){
+            if(!isset($_SESSION[self::INPUT_VALIDATOR_ERRORS][self::PASSWORD_ERROR_KEY]))
+                $_SESSION[self::INPUT_VALIDATOR_ERRORS][self::PASSWORD_ERROR_KEY]="<li>Passwords must match</li>";
+            else
+                $_SESSION[self::INPUT_VALIDATOR_ERRORS][self::PASSWORD_ERROR_KEY].="<li>Passwords must match</li>";
+        }
+        return $isPasswordsMatch AND $isPasswordValide;
+    }
+    public static function validatePhone(string $phoneNbr){
+        $isPhoneValid=preg_match(self::PHONE_PATTERN,$phoneNbr);;
+        if(!$isPhoneValid)
+            $_SESSION[self::INPUT_VALIDATOR_ERRORS][self::PHONE_ERROR_KEY]="<li>Invalid phone number:must start with 212 or 0 and then 6,5 or 8 followed by 8 numbers  </li>";
+        return $isPhoneValid;
+    }
     public static function error(string $input_key){
         return $_SESSION[InputValidator::INPUT_VALIDATOR_ERRORS][$input_key]??false;
     }
