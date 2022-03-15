@@ -4,7 +4,6 @@ require_once 'include/AccountManager.php';
 require_once 'include/DBManager.php';
 require_once 'include/InputValidator.php';
 require_once 'include/utils.php';
-//TODO:: fix the login scenario
 $am=AccountManager::getInstance();
 $db_manager=DBManager::getInstance();
 if($am->isLoggedIn()){
@@ -15,22 +14,24 @@ if($_SERVER['REQUEST_METHOD']=='POST' AND isset($_POST[DBContract::$Users_Col_Em
     $email = $_POST[DBContract::$Users_Col_Email];
     $pass = $_POST[DBContract::$Users_Password];
     $user = null;
-    if (InputValidator::validateEmail($email) and InputValidator::validatePassword($pass) ) {
-        if($user = $db_manager->getUserByEmail($email) AND password_verify($pass,$user->getPasswordHash())){
-            if(isset($_POST[DBContract::$Users_RememberMe]))
-                saveLoginDataInACookie();
+            //this is for admins
+            if(isset($_POST[AccountManager::IS_ADMIN_KEY]))
+                $user=$db_manager->getUserByEmail($email);
             else
-                deleteLoginDataInCookie();
-            $am->login($user->getId());
-            header('location:dashboard.php');
-            $redirect=1;
-        }else{
-            $user_error=1;
-        }
+                $user =$db_manager->getStudentByEmail($email);
+            if($user AND password_verify($pass,$user->getPasswordHash())){
+                if(isset($_POST[DBContract::$Users_RememberMe]))
+                    saveLoginDataInACookie();
+                else
+                    deleteLoginDataInCookie();
+                    $am->login($user->getId(),$user->isAdmin() );
+                    header(!$user->isAdmin() ? 'location:courses.php':'location:dashboard.php');
+                }else{
+                $user_error=1;
+            }
     }
-}
-loadLoggingDataFromACookie();
-    ?>
+    loadLoggingDataFromACookie();
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -57,30 +58,25 @@ loadLoggingDataFromACookie();
                             Invalid credentials check your spelling and try again !
                         </div>
                     <?php }?>
-                <form action="index.php" method="POST">
-                        <?php if(InputValidator::error(InputValidator::EMAIL_ERROR_KEY)):?>
-                        <div class="alert alert-danger">
-                            <?=InputValidator::error(InputValidator::EMAIL_ERROR_KEY) ?>
-                        </div>
-                    <?php endif;?>
-                    <div class="form-group">
+                <form action="index.php" method="POST" id="login_form">
+                       <div class="form-group">
                         <label for="<?= DBContract::$Users_Col_Email ?>">Email</label>
-                        <input type="email" class="form-control <?= InputValidator::error(InputValidator::EMAIL_ERROR_KEY)?'border-danger border':'' ?> " value="<?= $_POST[DBContract::$Users_Col_Email]??$GLOBALS[DBContract::$Users_RememberMe_Email]??'' ?>" id="<?= DBContract::$Users_Col_Email ?>" name="<?= DBContract::$Users_Col_Email ?>" placeholder="Enter your email">
+                        <input data-validate="1" data-validate-pattern="\w+@\w+(\.\w+){1,3}" data-validate-message="must be a valide email" type="email" class="form-control <?= isset($user_error)?'border-danger border':'' ?> " value="<?= $_POST[DBContract::$Users_Col_Email]??$GLOBALS[DBContract::$Users_RememberMe_Email]??'' ?>" id="<?= DBContract::$Users_Col_Email ?>" name="<?= DBContract::$Users_Col_Email ?>" placeholder="Enter your email">
                     </div>
-                    <?php if(InputValidator::error(InputValidator::PASSWORD_ERROR_KEY)):?>
-                        <div class="alert alert-danger">
-                            <?=InputValidator::error(InputValidator::PASSWORD_ERROR_KEY) ?>
-                        </div>
-                    <?php endif;?>
                     <div class="form-group">
                         <label for="<?= DBContract::$Users_Password ?>">Password</label>
-                        <input type="password" class="<?= InputValidator::error(InputValidator::PASSWORD_ERROR_KEY)?'border-danger border':'' ?> form-control" value="<?= $_POST[DBContract::$Users_Password]??$GLOBALS[DBContract::$Users_RememberMe_Pass]??'' ?>" name="<?= DBContract::$Users_Password ?>" id="<?= DBContract::$Users_Password ?>" placeholder="Enter your password">
+                        <input  data-validate='1' data-validate-pattern='.{8,}' data-validate-message="must contain at least eight charachters" type="password" class="<?= isset($user_error)?'border-danger border':'' ?> form-control" value="<?= $_POST[DBContract::$Users_Password]??$GLOBALS[DBContract::$Users_RememberMe_Pass]??'' ?>" name="<?= DBContract::$Users_Password ?>" id="<?= DBContract::$Users_Password ?>" placeholder="Enter your password">
+                    </div>
+                    <div class="form-check">
+                        <label for="<?= AccountManager::IS_ADMIN_KEY ?>" class="form-check-label">Admin</label>
+                        <input type="checkbox"  class="form-check-input" <?= isset($_POST[ AccountManager::IS_ADMIN_KEY ]) OR isset($GLOBALS[ AccountManager::IS_ADMIN_KEY ]) ? 'checked':'' ?> id="<?=  AccountManager::IS_ADMIN_KEY  ?>" name="<?= AccountManager::IS_ADMIN_KEY ?>" >
                     </div>
                     <div class="form-check">
                         <label for="<?= DBContract::$Users_RememberMe ?>" class="form-check-label">Remember me</label>
                          <input type="checkbox" class="form-check-input" <?= (isset($_POST[DBContract::$Users_RememberMe]) OR $GLOBALS[DBContract::$Users_RememberMe]) ?'checked':'' ?> name="<?= DBContract::$Users_RememberMe ?>" id="<?= DBContract::$Users_RememberMe ?>">
                     </div>
                     <input type="submit" class="form-control btn bg-primary text-light py-2" value="SIGN IN">
+                    <a class="btn bg-primary text-light py-2 form-control mt-1" href="student_signup.php">SIGN UP</a>
                 </form>
                 <p class="text-gray mt-3 mb-0 text-center">
                     Forgot your password? <a href="#" class="text-color-primary text-decoration-none"> Reset Password</a>
@@ -88,11 +84,13 @@ loadLoggingDataFromACookie();
                 </div>
             </div>
         </div>
-    </div>
+<script src="js/validator.js"></script>
+<script type="text/javascript">
+    const callback=(form)=>{
+        form.submit();
+    }
+    bindFormValidator(callback);
 
-</main>
-<?php if(isset($redirect)) redirect_with_js('dashboard.php');?>
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+</script>
 <?php include 'footer.php'?></body>
 </html>

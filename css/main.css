@@ -202,3 +202,8 @@ body {
 .main-content-toolbar{
     margin-bottom: 15px !important;
 }
+.error{
+    color:red;
+    font-size: 15px;
+
+}

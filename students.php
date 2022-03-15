@@ -174,7 +174,7 @@ if($action==$ACTION_ADD_SUBMIT) {
                                     </div>
                                  <?php }
                                     else{
-                                            $student=$db_manager->getStudentById($_GET[DBContract::$Students_Col_Id])
+                                            $student=$db_manager->getStudentByIdAsArray($_GET[DBContract::$Students_Col_Id])
                                             ?>
 
                                             <form action="students.php?<?=$ACTION_GET_KEY.'='.$ACTION_EDIT_SUBMIT.'&'.DBContract::$Students_Col_Id.'='.$student[DBContract::$Students_Col_Id]?>" method="post" class=" col-12 col-md-6 offset-md-3" enctype="multipart/form-data">
@@ -223,7 +223,7 @@ if($action==$ACTION_ADD_SUBMIT) {
                                             exit();
                                         }
 
-                                        $old_student=$db_manager->getStudentById($selected_student_id);
+                                        $old_student=$db_manager->getStudentByIdAsArray($selected_student_id);
                                         $profile_img_path=isset($_FILES[DBContract::$Students_Col_Image])?upload_profile_image():$old_student[DBContract::$Students_Col_Image];
                                         $db_manager->updateStudent($selected_student_id,array(
                                             DBContract::$Students_Col_Image=>$profile_img_path,
