@@ -70,7 +70,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' AND isset($_POST[DBContract::$Users_Col_Em
                     </div>
                     <div class="form-check">
                         <label for="<?= AccountManager::IS_ADMIN_KEY ?>" class="form-check-label">Admin</label>
-                        <input type="checkbox"  class="form-check-input" <?= isset($_POST[ AccountManager::IS_ADMIN_KEY ]) OR isset($GLOBALS[ AccountManager::IS_ADMIN_KEY ]) ? 'checked':'' ?> id="<?=  AccountManager::IS_ADMIN_KEY  ?>" name="<?= AccountManager::IS_ADMIN_KEY ?>" >
+                        <input type="checkbox"   <?= (isset($_POST[AccountManager::IS_ADMIN_KEY]) OR $GLOBALS[AccountManager::IS_ADMIN_KEY]) ?'checked':'' ?> class="form-check-input" <?= isset($_POST[ AccountManager::IS_ADMIN_KEY ]) OR isset($GLOBALS[ AccountManager::IS_ADMIN_KEY ]) ? 'checked':'' ?> id="<?=  AccountManager::IS_ADMIN_KEY  ?>" name="<?= AccountManager::IS_ADMIN_KEY ?>" >
                     </div>
                     <div class="form-check">
                         <label for="<?= DBContract::$Users_RememberMe ?>" class="form-check-label">Remember me</label>

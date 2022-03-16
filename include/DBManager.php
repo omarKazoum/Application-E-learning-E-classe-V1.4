@@ -242,21 +242,25 @@ class DBManager
      */
     public function updateStudent($studentId,array $student){
         $query='UPDATE '.DBContract::$Students_TableName.' SET '.
-            DBContract::$Students_Col_Image.'=?,'
-            .DBContract::$Students_Col_Name.'=?,'
-            .DBContract::$Students_Col_Email.'=? ,'
-            .DBContract::$Students_Col_Phone.'=? ,'
-            .DBContract::$Students_Col_EnrollNbr.'=?,'
-            .DBContract::$Students_Col_DateAdmission.'=?'
+            DBContract::$Students_Col_Image.'=? , '
+            .DBContract::$Students_Col_Name.'=? , '
+            .DBContract::$Students_Col_Email.'=? , '
+            .DBContract::$Students_Col_Phone.'=? , '
+            .DBContract::$Students_Col_EnrollNbr.'=? ,'
+            .DBContract::$Students_Col_DateAdmission.'=? ,'
+            .DBContract::$Students_Col_PasswordHash.'=? '
             .' WHERE '.DBContract::$Students_Col_Id.'=?;';
         $statment=DBManager::$db_connection->prepare($query);
-        $statment->bind_param('ssssssi',
+        $statment->bind_param('sssssssi',
             $student[DBContract::$Students_Col_Image],
             $student[DBContract::$Students_Col_Name],
             $student[DBContract::$Students_Col_Email],
             $student[DBContract::$Students_Col_Phone],
             $student[DBContract::$Students_Col_EnrollNbr],
-            $student[DBContract::$Students_Col_DateAdmission],$studentId);
+            $student[DBContract::$Students_Col_DateAdmission],
+            $student[DBContract::$Students_Col_PasswordHash],
+            $studentId
+        );
         return $statment->execute();
     }
 

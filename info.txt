@@ -10,3 +10,5 @@ const PRODUCTION=false;
 //db_host: localhost
 //db_pass: ^lr*bT9W?Pk~ur1Q
 
+done: 8,7,6,4,3,1
+standby: 5,2

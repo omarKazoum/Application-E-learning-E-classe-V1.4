@@ -1,22 +1,24 @@
 <?php
 require_once 'include/DBManager.php';
 require_once 'include/utils.php';
+require_once 'include/InputValidator.php';
 require_once 'students/constants.php';
 redirectToLoginIfNotLogged();
 $db_manager=DBManager::getInstance();
 if($action==$ACTION_ADD_SUBMIT){
     if (areAllStudentAddFieldsSetAndValid()) {
-        $path=upload_profile_image();
-        if(!$path){
-            die('invalid image');
+        if(!InputValidator::validateStudentEmailExists($db_manager->getStudentByEmail($_POST[DBContract::$Students_Col_Email]))){
+            redirectWithMessage(getUrlFor('students.php'),MESSAGE_TYPE_ERROR,'Unable to add student email already used by another student');
         }
+        $path=upload_profile_image();
         $db_manager->insertStudent(array(
             DBContract::$Students_Col_Name=>$_POST[DBContract::$Students_Col_Name],
-            DBContract::$Students_Col_Image=>$path,
+            DBContract::$Students_Col_Image=>empty($path)?'':$path,
             DBContract::$Students_Col_Email=>$_POST[DBContract::$Students_Col_Email],
             DBContract::$Students_Col_Phone=>$_POST[DBContract::$Students_Col_Phone],
             DBContract::$Students_Col_EnrollNbr=>uniqid(),
-            DBContract::$Students_Col_DateAdmission=>date('Y-m-d')
+            DBContract::$Students_Col_DateAdmission=>date('Y-m-d'),
+            DBContract::$Students_Col_PasswordHash=>password_hash($_POST[DBContract::$Students_Col_Password],PASSWORD_DEFAULT)
         ));
         $user_add_result = $USER_ADD_SUCCESS;
     } else
@@ -30,12 +32,13 @@ elseif($action==$ACTION_EDIT_SUBMIT){
         redirectWithMessage(getUrlFor('students.php'),MESSAGE_TYPE_ERROR,"You did not specify any user id");
         exit();
     }
-    elseif(!areAllStudentAddFieldsSetAndValid()){
+    elseif(!areAllStudentUpdateFieldsSetAndValid()){
         redirectWithMessage(getUrlFor('students.php'),MESSAGE_TYPE_ERROR,"Insufficient information supplied !");
         exit();
     }
 
     $old_student=$db_manager->getStudentByIdAsArray($selected_student_id);
+    $pass=(isset($_POST[DBContract::$Students_Col_Password])?password_hash($_POST[DBContract::$Students_Col_Password],PASSWORD_DEFAULT):$old_student[DBContract::$Students_Col_PasswordHash]);
     $profile_img_path=isset($_FILES[DBContract::$Students_Col_Image])?upload_profile_image():$old_student[DBContract::$Students_Col_Image];
     $db_manager->updateStudent($selected_student_id,array(
         DBContract::$Students_Col_Image=>$profile_img_path,
@@ -43,7 +46,8 @@ elseif($action==$ACTION_EDIT_SUBMIT){
         DBContract::$Students_Col_Email=>$_POST[DBContract::$Students_Col_Email],
         DBContract::$Students_Col_Phone=>$_POST[DBContract::$Students_Col_Phone],
         DBContract::$Students_Col_EnrollNbr=>$old_student[DBContract::$Students_Col_EnrollNbr],
-        DBContract::$Students_Col_DateAdmission=>$old_student[DBContract::$Students_Col_DateAdmission]
+        DBContract::$Students_Col_DateAdmission=>$old_student[DBContract::$Students_Col_DateAdmission],
+        DBContract::$Students_Col_PasswordHash=>$pass
     ));
     redirectWithMessage(getUrlFor('students.php'),MESSAGE_TYPE_SUCCESS,"changes have been saved!");
 

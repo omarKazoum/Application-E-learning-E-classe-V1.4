@@ -10,7 +10,6 @@ $USER_ADD_SUCCESS='user-add-success';
 $USER_ADD_FAILED='user-add-failed';
 $USER_ADD_NOT_SET=false;
 $USER_ADD_KEY='user-add';
-$user_add_result=$_GET[$USER_ADD_KEY]??$USER_ADD_NOT_SET;
 //saving newly added student
 $user_delete_key='user_delete';
 

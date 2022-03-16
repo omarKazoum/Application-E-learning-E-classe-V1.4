@@ -1,2 +1,10 @@
-this is a very good country having a lot of fun and a lot of happy endings
-contact us for more info on happiness@search.com or here hapiness@found.ma
+/admin
+    index == login (contains one form with a checkbox to enable admin mode & a sign up form for students (button "don't have an account signup which takes us to signup"))
+    /sign_up : POST/GET handle account creation for students and then redirect to dashboard
+    /dashboar : GET
+                    USER_Type:admins  > appears as usual
+                    USER_Type:student > hides all the other info except courses with view only access
+
+
+ all data update operations will be handled by the original page
+ the display forms will be done in the dialogs to gain time and keep changes to the minimum

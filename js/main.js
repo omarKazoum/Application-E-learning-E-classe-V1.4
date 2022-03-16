@@ -3,7 +3,7 @@ $('.btn-toggle-sidebar').css("transform", "rotate(90deg)");
 $(function(){
     $('.btn-toggle-sidebar').on("click",function(){
 
-        $('.sidebar').slideToggle(1000);
+        $('.sidebar').toggle(1000);
         if(hidden) {
             $(".content").removeClass('col-12');
             $(".content").addClass('col-9');
