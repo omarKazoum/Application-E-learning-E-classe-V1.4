@@ -7,7 +7,7 @@ class InputValidator
     public  const EMAIL_ERROR_KEY='email';
     public  const PASSWORD_PATTERN='/^.{8,100}$/';
     public  const EMAIL_PATTERN='/^\w+@\w+(\.\w+)+$/';
-    public  const PHONE_PATTERN='/^\+?(212)|0[658]\d{8}$/';
+    public  const PHONE_PATTERN='/^\+{0,1}(212)|0[658]\d{8}$/';
     public  const PHONE_ERROR_KEY ='phone' ;
 
     public static function flushErrors(){
@@ -66,7 +66,6 @@ class InputValidator
         return $isMatch AND $isEmailValide;
     }
     public static function validatePasswordsMatch(string $password1,string $password2){
-        //TODO: fix this just like for email
         $isPasswordValide=self::validatePassword($password1);
         $isPasswordsMatch=$password1==$password2 ;
         if(!$isPasswordsMatch){
@@ -86,5 +85,13 @@ class InputValidator
     public static function error(string $input_key){
         return $_SESSION[InputValidator::INPUT_VALIDATOR_ERRORS][$input_key]??false;
     }
-
+    public static function validateStudentEmailExists( $exists){
+        if(!$exists){
+            if(!isset($_SESSION[self::INPUT_VALIDATOR_ERRORS][self::EMAIL_ERROR_KEY]))
+                $_SESSION[self::INPUT_VALIDATOR_ERRORS][self::EMAIL_ERROR_KEY]="<li>Email address already in use by another student</li>";
+            else
+                $_SESSION[self::INPUT_VALIDATOR_ERRORS][self::EMAIL_ERROR_KEY].="<li>Email address already in use by another student</li>";
+        }
+        return !$exists;
+    }
 }

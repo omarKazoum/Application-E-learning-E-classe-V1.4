@@ -199,6 +199,9 @@ body {
 .sidebar a:hover{
     background-color:var(--color-primary-blue);
 }
+.sidebar a.btn{
+    color:black !important;
+}
 .main-content-toolbar{
     margin-bottom: 15px !important;
 }

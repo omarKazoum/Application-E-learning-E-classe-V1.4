@@ -7,11 +7,11 @@ require_once 'include/utils.php';
 $am=AccountManager::getInstance();
 $db_manager=DBManager::getInstance();
 //processing submitted data
-//TODO:: validate emails and passwords match with their second attempt plus that they meet the criteria
 if (    AreAllStudentSignUpFieldsSet()
         AND InputValidator::validateEmailsMatch($_POST[DBContract::$Students_Col_Email],$_POST[DBContract::$Students_Col_Email2])
         AND InputValidator::validatePasswordsMatch($_POST[DBContract::$Students_Col_Password],$_POST[DBContract::$Students_Col_Password2])
-        AND InputValidator::validatePhone($_POST[DBContract::$Students_Col_Phone])
+        AND InputValidator::validatePhone($_POST[DBContract::$Students_Col_Phone] )
+        AND InputValidator::validateStudentEmailExists($db_manager->getStudentByEmail($_POST[DBContract::$Students_Col_Email]))
     ) {
             $path=upload_profile_image();
             $db_manager->insertStudent(array(

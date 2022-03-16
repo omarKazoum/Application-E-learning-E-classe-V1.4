@@ -1,9 +1,9 @@
 <?php
 require_once 'include/DBManager.php';
-
+require_once 'include/utils.php';
 if(isset($_GET['id'])){
     //echo 'id passed is '.$_GET['id'].'<br>';
     DBManager::getInstance()->deleteStudent($_GET['id']);
-    header('location:students.php?user_delete=1');
+    redirectWithMessage(getUrlFor('students.php'),MESSAGE_TYPE_SUCCESS,'Student deleted successfully!');
 }else
-    die('student id not defined');
+    redirectWithMessage(getUrlFor('students.php'),MESSAGE_TYPE_ERROR,'Student Id not supported or insufficient privileges!');

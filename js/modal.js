@@ -31,7 +31,6 @@ document.querySelectorAll('.btn-display-in-modal').forEach((editBtn)=>{
 //handlign btns with a location to only be opend if confirmed with a predifined message
 document.querySelectorAll("[data-confirm='1']").forEach((btn)=>{
     btn.addEventListener('click',(event)=>{
-        console.log(event.target.dataset.confirmMessage);
         if(confirm(event.target.dataset.confirmMessage)===false)
             event.preventDefault();
     })
