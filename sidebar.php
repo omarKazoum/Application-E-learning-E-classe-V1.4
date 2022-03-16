@@ -54,7 +54,10 @@ else
                 </p>
             </a>
         <?php }?>
-        <a href="logout.php" title='Log out' class="mt-md-5 mt-2 btn gap-0 d-flex justify-content-center align-items-center" >
+        <a href="logout.php"
+           data-confirm="1"
+           data-confirm-message="are you sure you want to logout ?"
+           title='Log out' class="mt-md-5 mt-2 btn gap-0 d-flex justify-content-center align-items-center" >
             <p class=" text-start m-0 d-none d-md-block ">
                 Logout
             </p>

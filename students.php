@@ -62,7 +62,7 @@ if($action==$ACTION_ADD_SUBMIT) {
                                 <h1 class="h5 fw-bold">Students List</h1>
                                 <div class="toolbar-left-part">
                                     <a class="sort ic ic-sort btn btn-sort" title="sort button" href="students.php?<?= "$ORDER_KEY=$order_value_opposite"?>"></a>
-                                    <a class="btn btn-primary btn-add-students" title="add student button"  href="students/student_dialog_forms.php?<?=$ACTION_GET_KEY.'='.$ACTION_ADD_FORM?>">ADD NEW STUDENT</a>
+                                    <a class="btn btn-primary btn-add-students btn-display-in-modal" title="add student button"  href="students/student_dialog_forms.php?<?=$ACTION_GET_KEY.'='.$ACTION_ADD_FORM?>">ADD NEW STUDENT</a>
                                 </div>
                             </div>
                             <div class="table-header row mb-2 d-none d-lg-flex">
@@ -112,9 +112,11 @@ if($action==$ACTION_ADD_SUBMIT) {
                                         <?= $student[DBContract::$Students_Col_DateAdmission]?>
                                     </span>
                                     <span class="col-md-2 btns">
-                                        <a class="ic ic-edit btn btn-edit" title="edit button" href="students/student_dialog_forms.php?<?= DBContract::$Students_Col_Id.'='.$student[DBContract::$Students_Col_Id].'&'.$ACTION_GET_KEY.'='.$ACTION_EDIT ?>">
+                                        <a class="ic ic-edit btn btn-edit btn-display-in-modal" title="edit button" href="students/student_dialog_forms.php?<?= DBContract::$Students_Col_Id.'='.$student[DBContract::$Students_Col_Id].'&'.$ACTION_GET_KEY.'='.$ACTION_EDIT ?>">
                                         </a>
-                                        <a class="ic ic-delete btn btn-delete" title="delete button" href="student_delete.php?<?= DBContract::$Students_Col_Id.'='.$student[DBContract::$Students_Col_Id] ?>">
+                                        <a class="ic ic-delete btn btn-delete" title="delete button" href="student_delete.php?<?= DBContract::$Students_Col_Id.'='.$student[DBContract::$Students_Col_Id] ?>"
+                                            data-confirm="1" data-confirm-message=" are you sure you want to delete the student with name <?= $student[DBContract::$Students_Col_Name]?>"
+                                        >
                                         </a>
                                     </span>
                                 </div>
@@ -157,23 +159,7 @@ if($action==$ACTION_ADD_SUBMIT) {
         </div>
     </div>
 </main>
-<!-- Modal -->
-<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="modalBody">
-
-            </div>
-        </div>
-    </div>
-</div>
 <?php include 'footer.php'?>
-<script src="js/students.js"></script>
 
 </body>
 </html>
