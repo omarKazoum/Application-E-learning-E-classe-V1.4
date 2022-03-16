@@ -43,4 +43,6 @@ class DBContract
     public static string $Courses_Col_MentorName='mentor_name';
     public static string $Courses_Col_Date='date';
     public static string $Courses_Col_Duration='duration';
+    //not saved
+    public static string $Users_IsAdmin='isAdmin';
 }

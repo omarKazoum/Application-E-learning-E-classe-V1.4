@@ -86,7 +86,7 @@ class InputValidator
         return $_SESSION[InputValidator::INPUT_VALIDATOR_ERRORS][$input_key]??false;
     }
     public static function validateStudentEmailExists( $exists){
-        if(!$exists){
+        if($exists){
             if(!isset($_SESSION[self::INPUT_VALIDATOR_ERRORS][self::EMAIL_ERROR_KEY]))
                 $_SESSION[self::INPUT_VALIDATOR_ERRORS][self::EMAIL_ERROR_KEY]="<li>Email address already in use by another student</li>";
             else

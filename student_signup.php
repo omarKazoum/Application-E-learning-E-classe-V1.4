@@ -99,6 +99,7 @@ if (    AreAllStudentSignUpFieldsSet()
                                 </div>
                             <?php }?>
                             <input type="phone" class="form-control" name="<?= DBContract::$Students_Col_Phone ;?>"
+                                   value="<?= $_POST[DBContract::$Students_Col_Phone]??'' ?>"
                                    data-validate="1"
                                    data-validate-pattern="<?= str_replace( "/", "",InputValidator::PHONE_PATTERN)  ?>"
                                    data-validate-message="Invalide phone number"
