@@ -1,8 +1,8 @@
 <?php
-require_once 'config/config.php';
-require_once 'DBContract.php';
-require_once 'include/User.php';
-
+require_once $_SERVER['DOCUMENT_ROOT'].'/config/config.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/include/DBContract.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/include/User.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/include/Student.php';
     ini_set('display_errors', !PRODUCTION);
     ini_set('display_startup_errors', !PRODUCTION);
     error_reporting(!PRODUCTION ?E_ALL:E_ERROR);
@@ -74,8 +74,9 @@ class DBManager
                 .DBContract::$Students_Col_Email.' TEXT ,'
                 .DBContract::$Students_Col_Phone.' VARCHAR(12) ,'
                 .DBContract::$Students_Col_EnrollNbr.' TEXT ,'
-                .DBContract::$Students_Col_DateAdmission.' DATE '.
-            ')';
+                .DBContract::$Students_Col_DateAdmission.' DATE '
+                .DBContract::$Students_Col_PasswordHash.' TEXT'
+            .')';
             $payments_table_query='CREATE TABLE '.DBContract::$PaymentDetails_TableName.'('
                         .DBContract::$PaymentDetails_Col_Id.' INT PRIMARY KEY AUTO_INCREMENT,'
                         .DBContract::$PaymentDetails_Col_Name.' VARCHAR(20),'
@@ -161,6 +162,31 @@ class DBManager
         }
 
     }
+
+    public function getStudentByEmail($email)
+    {
+        $sql='SELECT * FROM '.DBContract::$Students_TableName.' WHERE '.DBContract::$Students_Col_Email."=?";
+        $statment=DBManager::$db_connection->prepare($sql);
+        $statment->bind_param('s',$email);
+        $row=null;
+        $statment->execute();
+        $result=$statment->get_result();
+        if( $row=$result->fetch_assoc()) {
+            $student = new Student();
+            $student->setId($row[DBContract::$Students_Col_Id]);
+            $student->setEmail($row[DBContract::$Students_Col_Email]);
+            $student->setPasswordHash($row[DBContract::$Students_Col_PasswordHash]??'');
+            $student->setUserName($row[DBContract::$Students_Col_Name]);
+            $student->setImageUrl($row[DBContract::$Students_Col_Image]);
+            $student->setPhone($row[DBContract::$Students_Col_Phone]);
+            $student->setEnrollNbr($row[DBContract::$Students_Col_EnrollNbr]);
+            $student->setDateAdmission($row[DBContract::$Students_Col_DateAdmission]);
+            return $student;
+        }else{
+            return null;
+        }
+    }
+
     /**
      * unused
      * @return DBManager|null
@@ -191,16 +217,19 @@ class DBManager
                 .DBContract::$Students_Col_Email.' ,'
                 .DBContract::$Students_Col_Phone.' ,'
                 .DBContract::$Students_Col_EnrollNbr.','
-                .DBContract::$Students_Col_DateAdmission.')'
-                .' VALUES(? , ?, ?, ?, ?,?)';
+                .DBContract::$Students_Col_DateAdmission.','
+                .DBContract::$Students_Col_PasswordHash
+            .')'
+                .' VALUES(? , ?, ?, ?, ?,?,?)';
         $statment=DBManager::$db_connection->prepare($query);
-        $statment->bind_param('ssssss',
+        $statment->bind_param('sssssss',
             $student[DBContract::$Students_Col_Name],
             $student[DBContract::$Students_Col_Image],
             $student[DBContract::$Students_Col_Email],
             $student[DBContract::$Students_Col_Phone],
             $student[DBContract::$Students_Col_EnrollNbr],
-            $student[DBContract::$Students_Col_DateAdmission]
+            $student[DBContract::$Students_Col_DateAdmission],
+            $student[DBContract::$Students_Col_PasswordHash]
         );
         $statment->execute();
     }
@@ -236,7 +265,7 @@ class DBManager
      * @param int $studentId
      * @return array
      */
-    public function getStudentById(int $studentId):array{
+    public function getStudentByIdAsArray(int $studentId):array{
         $query='SELECT * FROM '.DBContract::$Students_TableName.' WHERE '.DBContract::$Students_Col_Id.' ='.$studentId;
         $result=DBManager::$db_connection->query($query);
         $student=null;
@@ -249,6 +278,27 @@ class DBManager
                 DBContract::$Students_Col_Phone=>$row[DBContract::$Students_Col_Phone],
                 DBContract::$Students_Col_EnrollNbr=>$row[DBContract::$Students_Col_EnrollNbr],
                 DBContract::$Students_Col_DateAdmission=>$row[DBContract::$Students_Col_DateAdmission]
+            );
+        return $student;
+    }
+    /**
+     * returns an array containing the data of the student with the given id
+     * @param int $studentId
+     * @return array
+     */
+    public function getStudentById(int $studentId){
+        $query='SELECT * FROM '.DBContract::$Students_TableName.' WHERE '.DBContract::$Students_Col_Id.' ='.$studentId;
+        $result=DBManager::$db_connection->query($query);
+        $student=null;
+        while ($row =$result->fetch_assoc())
+            $student=new Student($row[DBContract::$Students_Col_Id],
+                $row[DBContract::$Students_Col_Email],
+                $row[DBContract::$Students_Col_Name],
+                $row[DBContract::$Students_Col_PasswordHash],
+                $row[DBContract::$Students_Col_Image],
+                $row[DBContract::$Students_Col_Phone],
+                $row[DBContract::$Students_Col_EnrollNbr],
+                $row[DBContract::$Students_Col_DateAdmission]
             );
         return $student;
     }

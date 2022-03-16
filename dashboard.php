@@ -1,8 +1,9 @@
 <?php
-require_once 'include/DBManager.php';
-require_once 'include/utils.php';
-redirectToLoginIfNotLogged();
-$db_manager=DBManager::getInstance();
+    require_once 'include/DBManager.php';
+    require_once 'include/utils.php';
+    redirectToLoginIfNotLogged();
+    $db_manager=DBManager::getInstance();
+    AccountManager::getInstance();
 ?>
 <!DOCTYPE html>
 <html lang="en">

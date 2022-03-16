@@ -1,14 +1,32 @@
 <?php
 class User{
-    private string $email;
-    private string $userName;
-    private string $passwordHash;
-    private int $id;
-    public function __construct(int $id=-1,string $email='',string $userName='',string $passwordHash=''){
+    protected bool $isAdmin=false;
+
+    /**
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $this->isAdmin;
+    }
+
+    /**
+     * @param bool $isAdmin
+     */
+    public function setAdmin(bool $isAdmin): void
+    {
+        $this->isAdmin = $isAdmin;
+    }
+    protected string $email;
+    protected string $userName;
+    protected string $passwordHash;
+    protected int $id;
+    public function __construct(int $id=-1,string $email='',string $userName='',string $passwordHash='',bool $isAdmin=true){
         $this->email=$email;
         $this->userName=$userName;
         $this->passwordHash=$passwordHash;
         $this->id=$id;
+        $this->isAdmin=$isAdmin;
     }
 
     /**

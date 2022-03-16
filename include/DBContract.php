@@ -1,5 +1,5 @@
 <?php
-require_once 'config/config.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/config/config.php';
 class DBContract
 {
     // for students table
@@ -11,6 +11,11 @@ class DBContract
     public static string $Students_Col_Phone='phone';
     public static string $Students_Col_EnrollNbr='enrollNbr';
     public static string $Students_Col_DateAdmission='dateAdmission';
+    public static string $Students_Col_PasswordHash='password_hash';
+    //not stored
+    public static string $Students_Col_Email2='email2';
+    public static string $Students_Col_Password='password';
+    public static string $Students_Col_Password2='password2';
     public static $Students_ProfileImgAcceptedTypes=['jpg','png','gif','jpeg'];
     //for users table
     public static string $Users_TableName='comptes';

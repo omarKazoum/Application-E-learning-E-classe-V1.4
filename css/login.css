@@ -6,7 +6,17 @@
 body {
     background: linear-gradient(69.66deg, #00C1FE 19.39%, #FAFFC1 96.69%);
     height: 100vh;
+
 }
+@media screen and (max-height:700px){
+    body{
+        height: initial;
+        --margin:100px;
+        margin-top:var(--margin);
+        margin-bottom:var(--margin);
+    }
+}
+
 .card{
     border-radius: 20px !important;
 }

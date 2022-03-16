@@ -1,13 +1,15 @@
 <?php
-require_once 'config/config.php';
-require_once 'include/DBManager.php';
-require_once 'include/DBContract.php';
-require_once 'include/InputValidator.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/config/config.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/include/DBManager.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/include/DBContract.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/include/InputValidator.php';
 class AccountManager
 {
     private const  CONNECTED_USER_ID_KEY='connected_user_id';
     private  string $connectedUserId='';
+    private bool $isAdmin=false;
     private  $logged_in=false;
+    public const IS_ADMIN_KEY="isadmin";
     private static ?AccountManager $instance=null;
     private function __construct()
     {
@@ -21,6 +23,7 @@ class AccountManager
         $this->logged_in=isset($_SESSION[self::CONNECTED_USER_ID_KEY]) AND !empty($_SESSION[self::CONNECTED_USER_ID_KEY]);
         if($this->logged_in){
             $this->connectedUserId=$_SESSION[self::CONNECTED_USER_ID_KEY];
+            $this->isAdmin=$_SESSION[self::IS_ADMIN_KEY];
         }
     }
 
@@ -30,11 +33,11 @@ class AccountManager
      * @return void
      *
      */
-    public function login(string $userId){
+    public function login(string $userId,bool $isAdmin){
         global $session_time_out_minutes;
         // server should keep session data for a certain number of seconds
         $_SESSION[self::CONNECTED_USER_ID_KEY]=$userId;
-        //echo 'suer id '.$_SESSION[self::CONNECTED_USER_ID_KEY];
+        $_SESSION[self::IS_ADMIN_KEY]=$isAdmin;
 
 
     }
@@ -61,9 +64,13 @@ class AccountManager
             AccountManager::$instance=new AccountManager();
         return AccountManager::$instance;
     }
+    public function getLoggedInUser():User{
+        $db_manager=DBManager::getInstance();
+        return $this->isLoggedInUserAnAdmin() ? $db_manager->getUserById(connectedUserId): $db_manager->getStudentById(connectedUserId);
+    }
 
-
-
-
-
+    public function isLoggedInUserAnAdmin()
+    {
+        return $this->isAdmin;
+    }
 }
