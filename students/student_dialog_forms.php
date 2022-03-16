@@ -6,22 +6,56 @@ if($action==$ACTION_ADD_FORM){
     ?>
     <form action="students.php?<?=$ACTION_GET_KEY.'='.$ACTION_ADD_SUBMIT?>" method="post" class=" col-12 " enctype="multipart/form-data">
         <h1 class="h5 fw-bold">Add a new Student</h1>
-        <div class="form-group justify-content-between">
-            <label for="<?= DBContract::$Students_Col_Name;?>">Student name:</label>
-            <input type="text" class="form-control"  required name="<?= DBContract::$Students_Col_Name ;?>">
-        </div>
-        <div class="form-group justify-content-between">
-            <label for="<?= DBContract::$Students_Col_Image;?>">Student image:</label>
-            <input type="file" placeholder="JPG/PNG" class="form-control-file" name="<?= DBContract::$Students_Col_Image ;?>">
-        </div>
-        <div class="form-group justify-content-between">
-            <label for="<?= DBContract::$Students_Col_Email ;?>">Student Email</label>
-            <input type="email" class="form-control" required name="<?= DBContract::$Students_Col_Email ;?>">
-        </div>
-        <div class="form-group  justify-content-between">
-            <label for="<?= DBContract::$Students_Col_Phone ;?>">Student Phone Number</label>
-            <input type="phone" class="form-control" required name="<?= DBContract::$Students_Col_Phone ;?>">
-        </div>
+            <div class="form-group">
+                <label for="<?= DBContract::$Students_Col_Name ?>">Full Name*</label>
+                <input
+                        data-validate="1" data-validate-pattern="^\w+( \w+)+$" data-validate-message="you must submit your first and last name"
+                        type="text" class="form-control value="<?= $_POST[DBContract::$Students_Col_Name]??'' ?>" id="<?= DBContract::$Students_Col_Name ?>" name="<?= DBContract::$Students_Col_Name ?>" placeholder="Enter your User name ">
+            </div>
+            <div class="form-group">
+                <label for="<?= DBContract::$Students_Col_Email ?>">Email*</label>
+                <input type="email"
+                       class="form-control <?= InputValidator::error(InputValidator::EMAIL_ERROR_KEY)?'border-danger border':'' ?> "
+                       value="<?= $_POST[DBContract::$Students_Col_Email]??'' ?>"
+                       id="<?= DBContract::$Students_Col_Email ?>"
+                       name="<?= DBContract::$Students_Col_Email ?>"
+                       data-validate="1"
+                       data-validate-pattern="\w+@\w+(\.\w+){1,3}"
+                       data-validate-message="must be a valid email"
+                       placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label for="<?= DBContract::$Students_Col_Image;?>">Profile image:</label>
+                <input type="file"
+                       placeholder="JPG/PNG"
+                       class="form-control-file"
+                       name="<?= DBContract::$Students_Col_Image ?>"
+                >
+            </div>
+            <div class="form-group justify-content-between">
+                <label for="<?= DBContract::$Students_Col_Phone ;?>">Student Phone Number</label>
+                <input type="phone" class="form-control" name="<?= DBContract::$Students_Col_Phone ;?>"
+                       value="<?= $_POST[DBContract::$Students_Col_Phone]??'' ?>"
+                       data-validate="1"
+                       data-validate-pattern="<?= str_replace( "/", "",InputValidator::PHONE_PATTERN)  ?>"
+                       data-validate-message="Invalide phone number"
+                >
+            </div>
+            <div class="form-group">
+                <label for="<?= DBContract::$Students_Col_Password ?>">Password*</label>
+
+                <input type="password"
+                       class="<?= InputValidator::error(InputValidator::PASSWORD_ERROR_KEY)?'border-danger border':'' ?> form-control"
+                       value="<?= $_POST[DBContract::$Students_Col_Password]??'' ?>"
+                       name="<?= DBContract::$Students_Col_Password ?>"
+                       id="<?= DBContract::$Students_Col_Password ?>"
+                       placeholder="Enter your password"
+                       data-validate="1"
+                       data-validate-pattern="<?= str_replace( "/", "",InputValidator::PASSWORD_PATTERN)  ?>"
+                       data-validate-message="Password must contain at least 8 charachters"
+                >
+            </div>
+
         <input type="submit" value="ADD STUDENT" class="btn btn-primary" name="submit">
     </form>
 <?php }
@@ -64,7 +98,20 @@ elseif($action==$ACTION_EDIT){
                 <label for="<?= DBContract::$Students_Col_Phone ;?>">Student Phone Number</label>
                 <input type="phone" class="form-control" required name="<?= DBContract::$Students_Col_Phone ;?>" value="<?= $student[DBContract::$Students_Col_Phone] ?>">
             </div>
+            <div class="form-group">
+                <label for="<?= DBContract::$Students_Col_Password ?>">Password</label>
 
+                <input type="password"
+                       class="<?= InputValidator::error(InputValidator::PASSWORD_ERROR_KEY)?'border-danger border':'' ?> form-control"
+                       value="<?= $_POST[DBContract::$Students_Col_Password]??'' ?>"
+                       name="<?= DBContract::$Students_Col_Password ?>"
+                       id="<?= DBContract::$Students_Col_Password ?>"
+                       placeholder="Unchanged"
+                       data-validate="1"
+                       data-validate-pattern="<?= str_replace( "/", "",InputValidator::PASSWORD_PATTERN)  ?>"
+                       data-validate-message="Password must contain at least 8 charachters"
+                >
+            </div>
             <input type="submit" value="SAVE" class="btn btn-primary">
         </form>
 

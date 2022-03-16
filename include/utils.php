@@ -19,6 +19,11 @@ function areAllStudentAddFieldsSetAndValid():bool{
     $studentFields=array(DBContract::$Students_Col_Name,DBContract::$Students_Col_Email,DBContract::$Students_Col_Phone);
     return areAllFieldsSet($studentFields,'POST');
 }
+
+function areAllStudentUpdateFieldsSetAndValid():bool{
+    $studentFields=array(DBContract::$Students_Col_Name,DBContract::$Students_Col_Email,DBContract::$Students_Col_Phone);
+    return areAllFieldsSet($studentFields,'POST');
+}
 function AreAllStudentSignUpFieldsSet():bool{
     $studentFields=array(
         DBContract::$Students_Col_Name,
@@ -67,6 +72,8 @@ function areAllFieldsSet(array $fields,string $method) :bool{
 function upload_profile_image($img_old_name=false):string{
     if(isset($_FILES[DBContract::$Students_Col_Image])) {
         $temp_path = $_FILES[DBContract::$Students_Col_Image]['tmp_name'];
+        if(empty($temp_path))
+            return '';
         $img_data = getimagesize($temp_path);
         $img_type=basename($img_data['mime']);
         echo 'type '.$img_type;
@@ -125,6 +132,7 @@ function printMessageIfexists($optionalCssClassForTheAlert=''){
 }
 function redirectWithMessage($url,$messageType,$message){
     header("location:$url".(strpos($url,'?')!==false?'&':'?').MESSAGE_TXT_KEY.'='.$message.'&'.MESSAGE_TYPE_KEY.'='.$messageType);
+    exit();
 }
 function getUrlFor($url_relative_to_root):string{
     return "http://" . $_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].'/'.$url_relative_to_root;
