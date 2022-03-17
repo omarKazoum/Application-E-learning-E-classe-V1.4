@@ -28,6 +28,8 @@ const enableErrorOn=(el,enable,message)=>{
  */
 const bindFormValidator=(callback=null) =>{
     document.querySelectorAll('form').forEach((form) => {
+        console.log('bound form '+form);
+        console.log(form);
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             const inputs = e.target.querySelectorAll("[data-validate='1']");

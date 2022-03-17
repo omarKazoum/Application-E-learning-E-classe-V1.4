@@ -86,12 +86,5 @@ if($_SERVER['REQUEST_METHOD']=='POST' AND isset($_POST[DBContract::$Users_Col_Em
             </div>
         </div>
 <script src="js/validator.js"></script>
-<script type="text/javascript">
-    const callback=(form)=>{
-        form.submit();
-    }
-    bindFormValidator(callback);
-
-</script>
 <?php include 'footer.php'?></body>
 </html>

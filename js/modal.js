@@ -13,6 +13,7 @@ const sendAjaxForModalContent=(method,url)=>{
             if (request.readyState === 4) {
                 // so the form is loaded
                 modalBody.innerHTML = request.response;
+                bindFormValidator();
             }
         }
         request.send();

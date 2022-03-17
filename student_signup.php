@@ -43,7 +43,7 @@ if (    AreAllStudentSignUpFieldsSet()
             <div class="card-body p-5">
                 <h1 class="card-title border-start border-primary mb-4 text-left font-weight-bold ps-3">E-classe</h1>
                 <div class="card-text">
-                    <h2 class="text-center">SIGN IN</h2>
+                    <h2 class="text-center">SIGN UP</h2>
                     <p class="text-center text-gray">
                         Fill this form to create a student account
                     </p>
@@ -52,7 +52,9 @@ if (    AreAllStudentSignUpFieldsSet()
                             <label for="<?= DBContract::$Students_Col_Name ?>">Full Name*</label>
                             <input
                                     data-validate="1" data-validate-pattern="^\w+( \w+)+$" data-validate-message="you must submit your first and last name"
-                                    type="text" class="form-control value="<?= $_POST[DBContract::$Students_Col_Name]??'' ?>" id="<?= DBContract::$Students_Col_Name ?>" name="<?= DBContract::$Students_Col_Name ?>" placeholder="Enter your User name ">
+                                    type="text" class="form-control value="<?= $_POST[DBContract::$Students_Col_Name]??'' ?>"
+                            id="<?= DBContract::$Students_Col_Name ?>" name="<?= DBContract::$Students_Col_Name ?>"
+                            placeholder="Enter your User name ">
                         </div>
                         <div class="form-group">
                             <label for="<?= DBContract::$Students_Col_Email ?>">Email*</label>
@@ -137,7 +139,9 @@ if (    AreAllStudentSignUpFieldsSet()
                                    data-validate-message="passwords must match"
                             >
                         </div>
-                        <input type="submit" class="form-control btn bg-primary text-light py-2" value="SIGN UP">
+                        <input type="submit" class="form-control btn bg-primary text-light py-2" value="SIGN UP"></input>
+                        <a href="index.php"
+                           class="form-control btn bg-primary text-light py-2" >SIGN IN</a>
                     </form>
                     <p class="text-gray mt-3 mb-0 text-center">
                         Forgot your password? <a href="#" class="text-color-primary text-decoration-none"> Reset Password</a>
@@ -152,9 +156,6 @@ if (    AreAllStudentSignUpFieldsSet()
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="js/validator.js"></script>
-<script type="text/javascript">
-    bindFormValidator();
-</script>
 <?php include 'footer.php'?></body>
 </html>
 <?php }?>

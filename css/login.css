@@ -8,7 +8,7 @@ body {
     height: 100vh;
 
 }
-@media screen and (max-height:700px){
+@media screen and (max-height:800px){
     body{
         height: initial;
         --margin:100px;
