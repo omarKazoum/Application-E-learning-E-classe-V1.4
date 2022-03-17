@@ -10,11 +10,24 @@ if($action==$ACTION_COURSES_ADD_FORM){?>
         <h1>Add new Course</h1>
         <div class="form-group">
             <label for="<?= DBContract::$Courses_Col_Title?>">Course title</label>
-            <input placeholder="Jump course" type="text" class="form-control" name="<?= DBContract::$Courses_Col_Title?>" id="<?= DBContract::$Courses_Col_Title?>" required>
+            <input placeholder="Jump course"
+                   type="text" class="form-control"
+                   name="<?= DBContract::$Courses_Col_Title?>"
+                   id="<?= DBContract::$Courses_Col_Title?>"
+                   data-validate="1"
+                   data-validate-pattern="^[a-zA-Z]\w{2,}$"
+                   data-validate-message="Course title must contain at least 3 characters"
+                   required>
         </div>
         <div class="form-group">
             <label for="<?= DBContract::$Courses_Col_MentorName?>">Mentor name</label>
-            <input placeholder="Mr Jack" type="text" class="form-control" name="<?= DBContract::$Courses_Col_MentorName?>" id="<?= DBContract::$Courses_Col_MentorName?>" required>
+            <input placeholder="Mr Jack" type="text" class="form-control"
+                   name="<?= DBContract::$Courses_Col_MentorName?>"
+                   id="<?= DBContract::$Courses_Col_MentorName?>"
+                   data-validate="1"
+                   data-validate-pattern="^[a-zA-Z]\w{2,}$"
+                   data-validate-message="Mentor name must contain at least 3 characters"
+                   required>
         </div>
         <div class="form-group">
             <label for="<?= DBContract::$Courses_Col_Date?>">Course Date</label>
@@ -34,11 +47,27 @@ elseif($action==$ACTION_COURSES_EDIT_FORM){
         <h1>Edit <?= $course[DBContract::$Courses_Col_Title]?> Course</h1>
         <div class="form-group">
             <label for="<?= DBContract::$Courses_Col_Title?>">Course title</label>
-            <input placeholder="Jump course" type="text" class="form-control" name="<?= DBContract::$Courses_Col_Title?>" id="<?= DBContract::$Courses_Col_Title?>" value="<?= $course[DBContract::$Courses_Col_Title]?>" required>
+            <input  data-validate="1"
+                    data-validate-pattern="^[a-zA-Z]\w{2,}$"
+                    data-validate-message="Course title must contain at least 3 characters"
+                    placeholder="Jump course"
+                    type="text" class="form-control"
+                    name="<?= DBContract::$Courses_Col_Title?>"
+                    id="<?= DBContract::$Courses_Col_Title?>"
+                    value="<?= $course[DBContract::$Courses_Col_Title]?>" required>
         </div>
         <div class="form-group">
             <label for="<?= DBContract::$Courses_Col_MentorName?>">Mentor name</label>
-            <input placeholder="Mr Jack" type="text" class="form-control" name="<?= DBContract::$Courses_Col_MentorName?>" id="<?= DBContract::$Courses_Col_MentorName?>" value="<?= $course[DBContract::$Courses_Col_MentorName]?>" required>
+            <input placeholder="Mr Jack"
+                   type="text"
+                   class="form-control"
+                   name="<?= DBContract::$Courses_Col_MentorName?>"
+                   id="<?= DBContract::$Courses_Col_MentorName?>"
+                   value="<?= $course[DBContract::$Courses_Col_MentorName]?>"
+                   data-validate="1"
+                   data-validate-pattern="^[a-zA-Z]\w{2,}$"
+                   data-validate-message="Mentor name must contain at least 3 characters"
+                   required>
         </div>
         <div class="form-group">
             <label for="<?= DBContract::$Courses_Col_Date?>">Course Date</label>
